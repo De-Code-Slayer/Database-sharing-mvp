@@ -4,3 +4,7 @@ psycopg2-binary
 flask_login
 flask_migrate
 python-dotenv
+flask_talisman
+Flask-WTF
+WTForms
+email_validator

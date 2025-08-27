@@ -1,0 +1,23 @@
+body { font-feature-settings: "ss01" on, "cv10" on; }
+.card { border-radius: 14px; }
+.btn { border-radius: 10px; }
+pre { white-space: pre-wrap; word-break: break-all; }
+
+
+/* database select radio card */
+/* Normal card hover */
+label .card {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+label .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+
+/* Highlight selected card */
+.btn-check:checked + label .card {
+  border: 2px solid #0d6efd; /* Bootstrap primary color */
+  box-shadow: 0 0.5rem 1rem rgba(13,110,253,0.25);
+}

@@ -3,20 +3,17 @@
 from flask import (Flask, request,
  render_template
 )
-import logger
+from .logger import logger
 from .config import config
 from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_login import LoginManager
+from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from dotenv import load_dotenv
-from sqlalchemy.engine.url import make_url
 from flask_talisman import Talisman
-from sqlalchemy import event
-from sqlalchemy.engine import Engine
-from sqlalchemy.exc import DisconnectionError
-from .views.view_utils.filters import register_filters
-from apscheduler.schedulers.background import BackgroundScheduler
+
+
 
 
 # Load environment variables from .env file
@@ -24,6 +21,7 @@ load_dotenv()
 
 # create the extension
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 
 
@@ -66,13 +64,15 @@ def create_app(test_config=None):
         db.create_all()
 
     #  register views
-    from .views.api import api
-    from .views.dashboard import dashboard
+    from .views.api.api import api_bp
+    from .views.auth.auth import auth
+    from .views.dashboard.dashboard import dashboard_bp
     
 
         # register blueprints
-    app.register_blueprint(dashboard)
-    app.register_blueprint(api, url_prefix="/api")
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(auth)
 
 
     # register filters 
@@ -81,7 +81,7 @@ def create_app(test_config=None):
 
     # setup login manager
     login_manager = LoginManager(app)
-    login_manager.login_view = 'dashboard.sign_in'    
+    login_manager.login_view = 'auth.login'    
     login_manager.login_message_category ='info'
 
     @login_manager.user_loader

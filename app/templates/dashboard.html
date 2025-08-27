@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Database for MVP{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Your databases</h4>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDbModal">Create database</button>
+</div>
+
+{% if tenants %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    {% for t in tenants %}
+    <div class="col">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <h6 class="fw-semibold">{{ t.schema }}</h6>
+          <p class="text-muted small mb-2">Role: {{ t.role }}</p>
+          <div class="mt-auto">
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
+              <ul class="dropdown-menu">
+                <li>
+                  <form method="post">
+                    <button class="dropdown-item" type="submit">Generate DATABASE_URL</button>
+                  </form>
+                </li>
+                <li>
+                  <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#showEnv{{t.id}}">View last env</button>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="post" >
+                    <button class="dropdown-item" type="submit">Backup</button>
+                  </form>
+                </li>
+                <li>
+                  <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#migrateModal{{t.id}}">Migrate to external</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View env modal -->
+    <div class="modal fade" id="showEnv{{t.id}}" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">DATABASE_URL</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            {% if t.last_env_url %}
+            <pre class="bg-light p-3 rounded small">DATABASE_URL={{ t.last_env_url }}</pre>
+            {% else %}
+              <p class="text-muted">No env generated yet. Use Generate DATABASE_URL first.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Migrate modal -->
+    <div class="modal fade" id="migrateModal{{t.id}}" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">Migrate {{ t.schema }} to external DB</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+          <form method="post">
+            <div class="modal-body">
+              <label class="form-label">External DATABASE_URL</label>
+              <input class="form-control" name="external_database_url" placeholder="postgresql://user:pass@host:port/db?sslmode=require" required>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" type="submit">Migrate</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text-center p-5 bg-white border rounded-3">
+    <p class="lead mb-2">No databases yet</p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDbModal">Create your first</button>
+  </div>
+{% endif %}
+
+<!-- Create database modal -->
+<div class="modal fade" id="createDbModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create new database</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <!-- Flask-WTF Form -->
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="modal-body">
+          <p class="text-muted small mb-3">
+            Select a database engine. (Only PostgreSQL is available for now.)
+          </p>
+
+         
+          
+
+
+      <div class="row g-3">
+  {% for value, label, image in form.db_type.choices %}
+    <div class="col-6">
+      <!-- Hidden radio -->
+      <input type="radio"
+             class="btn-check"
+             name="{{ form.db_type.name }}"
+             value="{{ value }}"
+             id="db-{{ value }}"
+             required>
+
+      <!-- Card as label -->
+      <label class="w-100" for="db-{{ value }}">
+        <div class="card h-100 shadow-sm text-center p-3">
+          <img src="{{ image }}" style="height:40px;">
+          <h6 class="mb-0">{{ label }}</h6>
+        </div>
+      </label>
+    </div>
+  {% endfor %}
+</div>
+
+
+
+          {% if form.db_type.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.db_type.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
