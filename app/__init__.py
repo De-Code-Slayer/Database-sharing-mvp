@@ -56,7 +56,7 @@ def create_app(test_config=None):
         pass
 
     # import db models
-    from .database.models import User
+    from .database.models import MyUser
     
 
     with app.app_context():
@@ -87,7 +87,7 @@ def create_app(test_config=None):
     @login_manager.user_loader
     def load_user(user_id):
         try:
-            return User.query.get(int(user_id))
+            return MyUser.query.get(int(user_id))
         except Exception as e:
             db.session.rollback()
             print(f'=========== Cant get user loaded {e}===========')

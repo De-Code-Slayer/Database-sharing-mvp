@@ -53,7 +53,7 @@ def forgot():
 # @auth.post("/forgot")
 # def forgot_post():
     # email = request.form.get("email","").strip().lower()
-    # user = User.query.filter_by(email=email).first()
+    # user = MyUser.query.filter_by(email=email).first()
     # if not user:
     #     flash("If that account exists, a reset link has been generated below.", "info")
     #     return redirect(url_for("auth.forgot"))
@@ -70,7 +70,7 @@ def forgot():
 #     password = request.form.get("password","")
 #     try:
 #         data = _ts().loads(token, max_age=3600)
-#         user = User.query.get(data["uid"])
+#         user = MyUser.query.get(data["uid"])
 #         if not user:
 #             raise BadSignature("no user")
 #         user.set_password(password)

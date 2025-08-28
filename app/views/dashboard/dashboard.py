@@ -11,9 +11,9 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
 @dashboard_bp.route('/home')
 @login_required
 def home():
-    tenants = CreateTenantForm()
+
     form = CreateTenantForm()
-    return render_template("dashboard.html", tenants=tenants, form=form)
+    return render_template("dashboard.html", form=form)
 
 
 @dashboard_bp.route("/select-db", methods=["GET", "POST"])
