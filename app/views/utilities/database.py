@@ -1,6 +1,6 @@
 import os
 import shutil
-from logger import logger
+from app.logger import logger
 
 
 
