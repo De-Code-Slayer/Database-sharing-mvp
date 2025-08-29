@@ -1,11 +1,13 @@
 import os
 import shutil
 from app.logger import logger
-from app import db
+from app import db, engine
 from sqlalchemy import text
 from flask import flash
 from app.database.models import DatabaseInstance
 from flask_login import current_user
+import secrets
+from .payment import create_subscription
 
 
 def save_db_credentials(credentials: dict):
@@ -25,16 +27,9 @@ def save_db_credentials(credentials: dict):
     password = credentials.get("password", "")
     host = "[HOST]"
     port = "[PORT]"
-    schema = credentials.get("schema", "")
+    schema = credentials.get("database", "")
 
-    if db_type == "postgresql":
-        uri = f"postgresql://{user}:{password}@{host}:{port}/{schema}"
-    elif db_type == "mysql":
-        uri = f"mysql+pymysql://{user}:{password}@{host}:{port}/{schema}"
-    elif db_type == "sqlite":
-        uri = f"sqlite:///{schema}.db"
-    else:
-        uri = ""
+    uri = credentials.get("uri", f"{db_type}://{user}:{password}@{host}:{port}/{schema}")
 
     instance = DatabaseInstance(
         user_id=current_user.id,
@@ -43,7 +38,7 @@ def save_db_credentials(credentials: dict):
     )
     db.session.add(instance)
     db.session.commit()
-    flash(f"Database instance '{instance.name}' created and saved.")
+    flash(f"Database instance '{instance.name}' created")
     return instance
 
 def create_unique_schema_name(base="tenant"):
@@ -57,6 +52,12 @@ def create_unique_password(length=12):
     import string
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choices(characters, k=length))
+
+def create_unique_prefix(base="user_"):
+    import random
+    import string
+    suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
+    return f"{base}{suffix}_"
 
 def backup_database(db_uri: str, backup_path="backup.db"):
     try:
@@ -74,30 +75,31 @@ def migrate_to(uri: str):
 
 
 def create_postgres_tenant():
-    
-    """
-    Create a new schema and optionally a new user in Postgres.
-    """
+   
 
-    try:
+    try : 
         
-        schema_name = create_unique_schema_name()
-        password = create_unique_password()
-        username = current_user.username if current_user else "default_user"
 
-
-        # 1️⃣ Optionally create a new user
-        if username and password:
-            db.session.execute(
-                text(f"CREATE USER {username} WITH PASSWORD :password"),
-                {"password": password}
-            )
+        # Auto-generate username/password 
         
-        # 2️⃣ Create the schema
-        owner_clause = f"AUTHORIZATION {username}" if username else ""
-        db.session.execute(
-            text(f"CREATE SCHEMA {schema_name} {owner_clause}")
-        )
+        username = f"user_{current_user.username}_{secrets.token_hex(4)}"
+        database_name = f"db_{secrets.token_hex(4)}"
+        password = secrets.token_urlsafe(16)
+
+        with engine.connect() as conn:
+            # Set autocommit because CREATE DATABASE cannot run inside a transaction
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+
+            # 1️⃣ Create user 
+            conn.execute(text(f"CREATE USER {username} WITH PASSWORD :password"),
+                            {"password": password})
+
+            # 2️⃣ Create the database
+            conn.execute(text(f"CREATE DATABASE {database_name} OWNER {username}"))
+
+        # 3️⃣ Return connection info for this tenant
+        connection_url = f"postgresql://{username}:{password}@{engine.url.host}:{engine.url.port}/{database_name}"
+
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error creating Postgres tenant: {e}")
@@ -105,8 +107,9 @@ def create_postgres_tenant():
         return None    
     # 3️⃣ Commit changes
     db.session.commit()
-    flash(f"Schema '{schema_name}' created successfully!")
-    return {"schema": schema_name, "username": username, "password": password, "db_type": "postgresql"}
+    create_subscription('postgres',database_name)
+    
+    return {"database": database_name, "username": username, "password": password, "db_type": "postgresql", "uri":connection_url}
 
 def create_mysql_tenant():
     pass
@@ -120,7 +123,7 @@ def create_sqlite_tenant():
 
 def create_database_tenant(form):
     selected = form.db_type.data
-
+    logger.info(f"Creating tenant for DB type: {selected}")
     
 
     tenants = {

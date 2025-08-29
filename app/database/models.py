@@ -9,13 +9,15 @@ class MyUser(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 
     # relationship to DatabaseInstance
     instances = db.relationship('DatabaseInstance', backref='owner', lazy=True)
+    subscriptions = db.relationship("Subscription", backref="user", lazy=True)
+    invoices = db.relationship("Invoice", backref="user", lazy=True)
     
 
     def set_password(self, raw):
@@ -39,8 +41,75 @@ class MyUser(db.Model, UserMixin):
 
 class DatabaseInstance(db.Model):
     # Represents a database instance owned by a user
-    user_id = db.Column(db.Integer, db.ForeignKey('MyUser.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('my_user.id'), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     uri = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# to be able to update database prices from database
+class Plan(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))  # "Database"
+    price = db.Column(db.Float)  # monthly price
+    description = db.Column(db.String(255))
+
+    # Relationships
+    subscriptions = db.relationship("Subscription", backref="plan", lazy=True)
+
+
+# subscription model to track user subscriptions
+class Subscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    plan_id = db.Column(db.Integer, db.ForeignKey("plan.id"))
+    sub_for = db.Column(db.String(50), unique=True)  # e.g., "databasename"
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)  # prepaid until this date
+    billing_type = db.Column(db.String(10), default="postpaid")  # prepaid or postpaid
+    status = db.Column(db.String(20), default="active")
+
+    # Relationships
+    invoices = db.relationship("Invoice", backref="subscription", lazy=True)
+
+
+
+class Invoice(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    subscription_id = db.Column(db.Integer, db.ForeignKey("subscription.id"))
+    amount = db.Column(db.Float)
+    status = db.Column(db.String(20), default="unpaid")  # unpaid, paid
+    period_start = db.Column(db.Date)
+    period_end = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+
+class BillingLog(db.Model):
+    __tablename__ = "billing_log"
+
+    id = db.Column(db.Integer, primary_key=True)
+    action = db.Column(db.String(100), nullable=False)  # e.g. "invoice_created"
+    details = db.Column(db.Text, nullable=True)  # description of what happened
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class PaymentProof(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    invoice_id = db.Column(db.Integer, db.ForeignKey("invoice.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    tx_hash = db.Column(db.String(200), nullable=True)   # optional
+    screenshot_url = db.Column(db.String(500), nullable=True)
+    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    feedback = db.Column(db.Text, nullable=True)
+    reviewed_at = db.Column(db.DateTime, nullable=True)
+    status = db.Column(db.String(20), default="pending")  # pending, approved, rejected
+
+
+
+
+
+

@@ -8,3 +8,5 @@ flask_talisman
 Flask-WTF
 WTForms
 email_validator
+Apscheduler
+firebase_admin

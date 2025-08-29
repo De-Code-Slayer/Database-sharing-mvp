@@ -29,15 +29,13 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField("Update password")
 
 class CreateTenantForm(FlaskForm):
-     name = StringField("Database Name", validators=[DataRequired()])
+    #  name = StringField("Database Name", validators=[DataRequired()])
      db_type = SelectField(
         "Database Type",
         choices=[("postgresql", "PostgreSQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"), ("mysql", "MySQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"), ("mongodb", "MongoDB", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"), ("sqlite", "SQLite","https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg")],
         validators=[DataRequired()]
                              ) 
      submit = SubmitField("Create")
-
-
 
 class MigrateForm(FlaskForm):
     external_database_url = StringField("External DATABASE_URL", validators=[DataRequired(), URL(), Length(max=2000)])

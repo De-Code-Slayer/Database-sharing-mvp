@@ -12,7 +12,7 @@ from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_talisman import Talisman
-
+from sqlalchemy import create_engine
 
 
 
@@ -21,6 +21,7 @@ load_dotenv()
 
 # create the extension
 db = SQLAlchemy()
+engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://"))
 csrf = CSRFProtect()
 
 
@@ -129,6 +130,14 @@ def create_app(test_config=None):
         })
         return response
     
+
+    from apscheduler.schedulers.background import BackgroundScheduler
+    from .cron.job import run_billing_cron
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=run_billing_cron, trigger="cron", hour=0)  # run daily at midnight
+    scheduler.start()
+
+
 
     return app
 
