@@ -8,7 +8,7 @@ class BaseConfig:
     SQLALCHEMY_POOL_SIZE = 10  # Maximum number of connections to keep in the pool
     SQLALCHEMY_POOL_TIMEOUT = 299  # Timeout for acquiring a connection from the pool
     SQLALCHEMY_POOL_PRE_PING = True  # Check the connection before using it   
-    SQLALCHEMY_ECHO = True # Log SQL queries for debugging
+    SQLALCHEMY_ECHO = False # Log SQL queries for debugging
     LOG_LEVEL = "INFO"
 
     # Server defaults (can be overridden by ENV)

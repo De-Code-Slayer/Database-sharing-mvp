@@ -99,8 +99,9 @@ def prepaid_subscription(plan,name, months_paid):
 
     return sub, invoice
 
-def proccess_proof(request, invoice_id):
-    file = request.files["screenshot"]
+def proccess_proof(request):
+    invoice_id = request.form.get('invoice-id')
+    file = request.files["payment_proof"]
     tx_hash = request.form.get("tx_hash")
 
     if file and allowed_file(file.filename):

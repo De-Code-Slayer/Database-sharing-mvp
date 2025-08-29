@@ -17,6 +17,8 @@ def home():
     return render_template("dashboard.html", form=form)
 
 
+
+
 @dashboard_bp.route("/select-db", methods=["GET", "POST"])
 @login_required
 def select_db():
@@ -29,13 +31,27 @@ def select_db():
     return redirect(url_for("dashboard.home"))
     
 
-@dashboard_bp.route("/submit-proof/<int:invoice_id>", methods=["GET", "POST"])
-def submit_proof(invoice_id):
+@dashboard_bp.route("/delete", methods=["POST"])
+@login_required
+def delete_db():
+    return 
+
+
+@dashboard_bp.route("/billing", methods=["GET"])
+@login_required
+def billing():
+    
+    return render_template('billing.html')
+
+
+
+@dashboard_bp.route("/submit-proof", methods=["POST"])
+def submit_proof():
     if request.method == "POST":
         # handle file upload and save proof of payment
-        proccess_proof(request, invoice_id)
-        return redirect(url_for("dashboard.submit_proof", invoice_id=invoice_id))
-    return redirect(url_for("dashboard.home"))
+        proccess_proof(request)
+        return redirect(url_for("dashboard.billing"))
+    return redirect(url_for("dashboard.billing"))
 
 
 

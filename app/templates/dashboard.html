@@ -20,19 +20,28 @@
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
               <ul class="dropdown-menu">
                 <li>
-                  <p class="dropdown-item-text small text-muted mb-0">DATABASE_URL: <pre><small>{{t.uri}}</small></pre> </p>
+                  <p class="dropdown-item-text small text-muted mb-0">
+                    DATABASE_URL:
+                    <pre><small>{{t.uri}}</small></pre>
+                  </p>
                 </li>
                 <li>
                   <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#showEnv{{t.id}}">Rotate Credentials</button>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <form method="post" >
+                  <form method="post">
                     <button class="dropdown-item" type="submit">Backup</button>
                   </form>
                 </li>
                 <li>
                   <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#migrateModal{{t.id}}">Migrate to external</button>
+                </li>
+                <li>
+                  <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#terminalModal{{t.id}}">Open Terminal</button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{t.id}}">Delete Database</button>
                 </li>
               </ul>
             </div>
@@ -50,7 +59,7 @@
           </div>
           <div class="modal-body">
             {% if t.last_env_url %}
-            <pre class="bg-light p-3 rounded small">DATABASE_URL={{ t.last_env_url }}</pre>
+              <pre class="bg-light p-3 rounded small">DATABASE_URL={{ t.last_env_url }}</pre>
             {% else %}
               <p class="text-muted">No env generated yet. Use Generate DATABASE_URL first.</p>
             {% endif %}
@@ -73,6 +82,46 @@
             <div class="modal-footer">
               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
               <button class="btn btn-primary" type="submit">Migrate</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal modal -->
+    <div class="modal fade" id="terminalModal{{t.id}}" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">Open Terminal for {{ t.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Placeholder for terminal -->
+            <div class="bg-dark text-white rounded p-3" style="height:400px; overflow:auto;">
+              <p class="small text-muted">Interactive terminal coming soon...</p>
+              <pre>$ psql {{ t.uri }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete modal -->
+    <div class="modal fade" id="deleteModal{{t.id}}" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">Delete Database {{ t.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <form method="post" action="{{ url_for('dashboard.delete_db', db_id=t.id) }}">
+            <div class="modal-body">
+              <p class="text-danger">Warning: This action cannot be undone. All data in <strong>{{ t.name }}</strong> will be lost.</p>
+              <label class="form-label">Type the database name (<strong>{{ t.name }}</strong>) to confirm:</label>
+              <input type="text" name="confirm_name" class="form-control" placeholder="{{ t.name }}" required>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-danger" type="submit">Delete</button>
             </div>
           </form>
         </div>
@@ -106,33 +155,24 @@
             Select a database engine. (Only PostgreSQL is available for now.)
           </p>
 
-         
-          
-
-
-      <div class="row g-3">
-  {% for value, label, image in form.db_type.choices %}
-    <div class="col-6">
-      <!-- Hidden radio -->
-      <input type="radio"
-             class="btn-check"
-             name="{{ form.db_type.name }}"
-             value="{{ value }}"
-             id="db-{{ value }}"
-             required>
-
-      <!-- Card as label -->
-      <label class="w-100" for="db-{{ value }}">
-        <div class="card h-100 shadow-sm text-center p-3">
-          <img src="{{ image }}" style="height:40px;">
-          <h6 class="mb-0">{{ label }}</h6>
-        </div>
-      </label>
-    </div>
-  {% endfor %}
-</div>
-
-
+          <div class="row g-3">
+            {% for value, label, image in form.db_type.choices %}
+              <div class="col-6">
+                <input type="radio"
+                       class="btn-check"
+                       name="{{ form.db_type.name }}"
+                       value="{{ value }}"
+                       id="db-{{ value }}"
+                       required>
+                <label class="w-100" for="db-{{ value }}">
+                  <div class="card h-100 shadow-sm text-center p-3">
+                    <img src="{{ image }}" style="height:40px;">
+                    <h6 class="mb-0">{{ label }}</h6>
+                  </div>
+                </label>
+              </div>
+            {% endfor %}
+          </div>
 
           {% if form.db_type.errors %}
             <div class="invalid-feedback d-block">
@@ -149,7 +189,5 @@
     </div>
   </div>
 </div>
-
-
 
 {% endblock %}

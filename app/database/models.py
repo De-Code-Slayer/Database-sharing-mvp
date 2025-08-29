@@ -62,7 +62,7 @@ class Plan(db.Model):
 # subscription model to track user subscriptions
 class Subscription(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"))
     plan_id = db.Column(db.Integer, db.ForeignKey("plan.id"))
     sub_for = db.Column(db.String(50), unique=True)  # e.g., "databasename"
     start_date = db.Column(db.Date)
@@ -77,7 +77,7 @@ class Subscription(db.Model):
 
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"))
     subscription_id = db.Column(db.Integer, db.ForeignKey("subscription.id"))
     amount = db.Column(db.Float)
     status = db.Column(db.String(20), default="unpaid")  # unpaid, paid
@@ -99,7 +99,7 @@ class BillingLog(db.Model):
 class PaymentProof(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     invoice_id = db.Column(db.Integer, db.ForeignKey("invoice.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"), nullable=False)
 
     tx_hash = db.Column(db.String(200), nullable=True)   # optional
     screenshot_url = db.Column(db.String(500), nullable=True)
