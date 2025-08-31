@@ -117,7 +117,7 @@
         <tr>
           <td>{{ loop.index }}</td>
           <td>{{ inv.id }}</td>
-          <td>{{ inv.period_start.strftime("%Y-%m-%d") '-' inv.period_end.strftime("%Y-%m-%d") }}</td>
+          <td>{{ inv.period_start.strftime("%Y-%m-%d") + '-' + inv.period_end.strftime("%Y-%m-%d") }}</td>
           <td>${{ "%.2f"|format(inv.amount) }}</td>
           <td>
             {% if inv.status == "paid" %}

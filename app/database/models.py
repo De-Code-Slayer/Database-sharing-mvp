@@ -44,6 +44,9 @@ class DatabaseInstance(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('my_user.id'), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    database_name = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
     uri = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

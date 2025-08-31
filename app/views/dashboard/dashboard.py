@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from ..forms.forms import CreateTenantForm
-from ..utilities.database import create_database_tenant
+from ..utilities.database import create_database_tenant, delete_database_tenant
 from ..utilities.payment import proccess_proof
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
@@ -34,7 +34,10 @@ def select_db():
 @dashboard_bp.route("/delete", methods=["POST"])
 @login_required
 def delete_db():
-    return 
+   
+    if request.method == "POST":    
+        delete_database_tenant(request.form)
+    return redirect(url_for('dashboard.home'))
 
 
 @dashboard_bp.route("/billing", methods=["GET"])

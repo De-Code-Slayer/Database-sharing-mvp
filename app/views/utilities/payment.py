@@ -34,6 +34,13 @@ def create_subscription(plan,name):
 
     return sub
 
+def delete_subscription(database_name):
+     # find the database sub
+    db_plan = Subscription.query.filter_by(sub_for=database_name).first()
+    db.session.delete(db_plan)
+    db.session.commit()
+    pass
+
 def generate_monthly_invoices():
     today = date.today()
     first_day = date(today.year, today.month, 1)

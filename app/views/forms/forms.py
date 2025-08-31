@@ -37,6 +37,7 @@ class CreateTenantForm(FlaskForm):
                              ) 
      submit = SubmitField("Create")
 
+
 class MigrateForm(FlaskForm):
     external_database_url = StringField("External DATABASE_URL", validators=[DataRequired(), URL(), Length(max=2000)])
     submit = SubmitField("Migrate")

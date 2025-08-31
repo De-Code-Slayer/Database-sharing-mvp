@@ -7,7 +7,7 @@ from flask import flash
 from app.database.models import DatabaseInstance
 from flask_login import current_user
 import secrets
-from .payment import create_subscription
+from .payment import create_subscription,delete_subscription
 
 
 def save_db_credentials(credentials: dict):
@@ -33,6 +33,9 @@ def save_db_credentials(credentials: dict):
 
     instance = DatabaseInstance(
         user_id=current_user.id,
+        username = user,
+        password = password,
+        database_name = schema,
         name=db_type,
         uri=uri
     )
@@ -40,6 +43,9 @@ def save_db_credentials(credentials: dict):
     db.session.commit()
     flash(f"Database instance '{instance.name}' created")
     return instance
+
+def get_db_instance_by_id(id):
+    return DatabaseInstance.query.filter_by(id=id).first()
 
 def create_unique_schema_name(base="tenant"):
     import random
@@ -72,7 +78,6 @@ def backup_database(db_uri: str, backup_path="backup.db"):
 
 def migrate_to(uri: str):
     logger.info(f"Migration feature stub: would migrate to {uri}")
-
 
 def create_postgres_tenant():
    
@@ -111,12 +116,43 @@ def create_postgres_tenant():
     
     return {"database": database_name, "username": username, "password": password, "db_type": "postgresql", "uri":connection_url}
 
+def delete_postgres_tenant(instance):
+    try:
+        username = instance.username
+        database_name = instance.database_name
+
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+
+            # 1️⃣ Drop the database (must happen before dropping the user if user owns it)
+            conn.execute(text(f'DROP DATABASE IF EXISTS "{database_name}"'))
+
+            # 2️⃣ Drop the user
+            conn.execute(text(f'DROP USER IF EXISTS "{username}"'))
+
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error Deleting Postgres tenant: {e}")
+        flash(f"Error Deleting Postgres tenant: {e}", "danger")
+        return None    
+
+    # 3️⃣ Commit changes in your app database
+    db.session.commit()
+
+    # 4️⃣ Delete subscription metadata (if you manage that separately)
+    delete_subscription(database_name)
+
+    return True
+
 def create_mysql_tenant():
     pass
+
 def create_mongodb_tenant():
     pass
+
 def create_firebase_tenant():
     pass
+
 def create_sqlite_tenant():
     pass
 
@@ -144,6 +180,46 @@ def create_database_tenant(form):
 
 
     pass
+
+def delete_database_tenant(form):
+
+    db_id = form.get('id')
+
+    instance = get_db_instance_by_id(db_id)
+    db_type = instance.name
+    logger.info(f"Deleting tenant for DB type: {db_type}")
+    
+    # check if user owns db
+    if instance.user_id != current_user.id:
+        flash('You do not own the database you are trying to delete', 'danger')
+        return 
+
+
+    tenants = {
+        "postgresql":delete_postgres_tenant,
+        "mysql":create_mysql_tenant,
+        "mongodb":create_mongodb_tenant,
+        "sqlite":create_sqlite_tenant,
+        "firebase":create_firebase_tenant,
+    }
+
+    delete_tenant = tenants[db_type]
+    credentials = delete_tenant(instance)
+
+    # delete cred to main db
+    db.session.delete(instance)
+    db.session.commit()
+
+
+    pass
+
+
+
+
+
+
+
+
 
 def create_database(name: str):
 
