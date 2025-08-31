@@ -8,6 +8,10 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
 
 
 
+@dashboard_bp.route('/')
+def landing():
+    return render_template("landing.html")
+
 
 @dashboard_bp.route('/home')
 @login_required

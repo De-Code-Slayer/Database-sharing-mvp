@@ -42,7 +42,7 @@ class MyUser(db.Model, UserMixin):
 class DatabaseInstance(db.Model):
     # Represents a database instance owned by a user
     user_id = db.Column(db.Integer, db.ForeignKey('my_user.id'), nullable=False)
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, unique=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     username = db.Column(db.String(50), nullable=False)
     database_name = db.Column(db.String(50), nullable=False)
@@ -71,7 +71,7 @@ class Subscription(db.Model):
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)  # prepaid until this date
     billing_type = db.Column(db.String(10), default="postpaid")  # prepaid or postpaid
-    status = db.Column(db.String(20), default="active")
+    status = db.Column(db.String(20), default="active") #active, suspended
 
     # Relationships
     invoices = db.relationship("Invoice", backref="subscription", lazy=True)

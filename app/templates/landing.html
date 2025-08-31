@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Launch unlimited databases in one click. Affordable, secure, and developer-friendly. Free migration support both ways. Perfect for startups, MVPs, data science, and learning.">
+  <meta name="keywords" content="database hosting, affordable database, managed db, pay as you go, MVP database, data science database, SQL hosting">
+  <meta name="author" content="YourCompanyName">
+  <title>Affordable & Secure Database Hosting | YourCompanyName</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-black font-sans">
+  <!-- Hero Section -->
+  <section class="text-center py-16 px-6 bg-black text-white">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">Unlimited Database Hosting</h1>
+    <p class="text-lg md:text-xl mb-6">Create as many DBs as you need. Only billed at the end of the month. Start from just $4.</p>
+    <a href="{{url_for('dashboard.home')}}" class="bg-white text-black px-6 py-3 rounded-2xl font-semibold shadow-md hover:bg-gray-100 transition">Create Your First DB</a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
+    <div class="p-6 bg-black text-white rounded-2xl shadow">
+      <div class="text-5xl mb-4">💸</div>
+      <h3 class="text-xl font-bold mb-2">Affordable & Transparent</h3>
+      <p>Pricing starts at just $4/month. Pay-as-you-go flexibility or fixed pricing—you choose.</p>
+    </div>
+    <div class="p-6 bg-black text-white rounded-2xl shadow">
+      <div class="text-5xl mb-4">⚡</div>
+      <h3 class="text-xl font-bold mb-2">1-Click Setup</h3>
+      <p>Create fully managed databases instantly. Ideal for project starters, MVPs, and learning.</p>
+    </div>
+    <div class="p-6 bg-black text-white rounded-2xl shadow">
+      <div class="text-5xl mb-4">🔒</div>
+      <h3 class="text-xl font-bold mb-2">Secure & Reliable</h3>
+      <p>Strong encryption and free backups (not daily, but always included) to keep your data safe.</p>
+    </div>
+  </section>
+
+  <!-- Migration Section -->
+  <section class="py-16 px-6 bg-gray-100 text-center">
+    <h2 class="text-3xl font-bold mb-6">Migration Without Lock-In</h2>
+    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <h3 class="text-xl font-semibold mb-2">📥 Free Migration To Us</h3>
+        <p>Move your data in with zero hassle—we’ll handle it for free.</p>
+      </div>
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <h3 class="text-xl font-semibold mb-2">📤 Free Migration Away</h3>
+        <p>Leaving? We’ll help you export everything—no vendor lock-in.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="py-16 px-6 max-w-6xl mx-auto text-center">
+    <h2 class="text-3xl font-bold mb-8">Built For Everyone</h2>
+    <div class="grid md:grid-cols-4 gap-6">
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <div class="text-4xl mb-2">🚀</div>
+        <p>Project Starters</p>
+      </div>
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <div class="text-4xl mb-2">💡</div>
+        <p>MVP Builders</p>
+      </div>
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <div class="text-4xl mb-2">📊</div>
+        <p>Data Scientists</p>
+      </div>
+      <div class="p-6 bg-black text-white rounded-2xl shadow">
+        <div class="text-4xl mb-2">📚</div>
+        <p>Learners & Students</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="py-16 px-6 bg-black text-white text-center">
+    <h2 class="text-3xl font-bold mb-8">Simple Pricing</h2>
+    <p class="mb-6">Unlimited databases. Only billed at month-end. Free backups included.</p>
+    <div class="max-w-3xl mx-auto grid md:grid-cols-3 gap-6">
+      <div class="p-6 bg-white text-black rounded-2xl shadow">
+        <h3 class="text-xl font-bold mb-2">Starter</h3>
+        <p class="mb-4">Create unlimited DBs. First invoice at month-end.</p>
+        <p class="font-bold">From $4/mo</p>
+      </div>
+      <div class="p-6 bg-gray-900 rounded-2xl shadow">
+        <h3 class="text-xl font-bold mb-2">Pay As You Go</h3>
+        <p class="mb-4">Flexible usage-based pricing. Scale freely.</p>
+        <p class="font-bold">Usage-based</p>
+      </div>
+      <div class="p-6 bg-white text-black rounded-2xl shadow">
+        <h3 class="text-xl font-bold mb-2">Fixed Price</h3>
+        <p class="mb-4">Predictable monthly cost. Peace of mind included.</p>
+        <p class="font-bold">Starts at $4/mo</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section id="signup" class="py-16 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">Spin Up Your Database Today</h2>
+    <p class="mb-6">Unlimited databases, free backups, free migrations. Starting at just $4/month.</p>
+    <a href="{{url_for('dashboard.home')}}" class="bg-black text-white px-8 py-4 rounded-2xl font-semibold shadow hover:bg-gray-800 transition">Get Started</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 bg-black text-gray-400 text-center text-sm">
+    <p>&copy; 2025 YourCompanyName. All rights reserved.</p>
+    <p class="mt-2">Affordable, Secure, and Scalable Database Hosting.</p>
+  </footer>
+</body>
+</html>

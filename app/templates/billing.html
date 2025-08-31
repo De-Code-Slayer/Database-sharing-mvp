@@ -3,7 +3,7 @@
 {% block content %}
 
 {% set invoices = current_user.invoices %}
-{% set subscriptions = current_user.invoices %}
+{% set subscriptions = current_user.subscriptions %}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="mb-0">Billing & Invoices</h4>
@@ -30,12 +30,12 @@
           <td>{{ loop.index }}</td>
           <td>{{ sub.id }}</td>
           <td>{{ sub.start_date.strftime("%Y-%m-%d") }}</td>
-          <td>${{ sub.status }}</td>
+          <td>{{ sub.end_date.strftime("%Y-%m-%d") }}</td>
           <td>
             {% if sub.status == "active" %}
-              <span class="badge bg-success">Paid</span>
+              <span class="badge bg-success">Active</span>
             {% elif sub.status != "active" %}
-              <span class="badge bg-danger">Failed</span>
+              <span class="badge bg-danger">Suspended</span>
             {% else %}
               <span class="badge bg-secondary">{{ sub.status|capitalize }}</span>
             {% endif %}

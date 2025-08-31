@@ -37,6 +37,12 @@ class CreateTenantForm(FlaskForm):
                              ) 
      submit = SubmitField("Create")
 
+class DeleteTenantForm(FlaskForm):
+     name = StringField("Database Name", validators=[DataRequired()])
+     confirm_name = StringField("Confirm", validators=[DataRequired(), EqualTo('database name', message='Database name dont match')])
+     id =  StringField("Database ID", validators=[DataRequired()])
+     submit = SubmitField("Delete")
+
 
 class MigrateForm(FlaskForm):
     external_database_url = StringField("External DATABASE_URL", validators=[DataRequired(), URL(), Length(max=2000)])

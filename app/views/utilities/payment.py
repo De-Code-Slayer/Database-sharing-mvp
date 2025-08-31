@@ -5,6 +5,7 @@ from flask_login import current_user
 from datetime import datetime, date, timedelta
 from werkzeug.utils import secure_filename
 from app import db
+from app.logger import logger
 
 
 UPLOAD_FOLDER = "static/uploads/proofs"
@@ -26,6 +27,7 @@ def create_subscription(plan,name):
         plan_id=db_plan.id,
         sub_for=name,
         start_date=date.today(),
+        end_date = date.today() + timedelta(days=30),
         billing_type="postpaid"
     )
     db.session.add(sub)
@@ -35,11 +37,15 @@ def create_subscription(plan,name):
     return sub
 
 def delete_subscription(database_name):
-     # find the database sub
+    # find the database sub
     db_plan = Subscription.query.filter_by(sub_for=database_name).first()
-    db.session.delete(db_plan)
-    db.session.commit()
-    pass
+
+    if db_plan:  # Only delete if it exists
+        db.session.delete(db_plan)
+        db.session.commit()
+    else:
+        logger.warning(f"No subscription found for database {database_name}")
+        raise ValueError(f"No subscription found for database {database_name}")
 
 def generate_monthly_invoices():
     today = date.today()
