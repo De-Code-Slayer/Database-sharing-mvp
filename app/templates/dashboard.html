@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page = 'dashboard' %}
 {% block title %}Dashboard | Database for MVP{% endblock %}
 {% block content %}
 
@@ -55,6 +56,13 @@
                             disabled data-bs-toggle="tooltip" data-bs-placement="right" 
                             title="Coming soon">
                       Migrate to external
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#importModal{{t.id}}" 
+                            disabled data-bs-toggle="tooltip" data-bs-placement="right" 
+                            title="Coming soon">
+                      Import from external
                     </button>
                   </li>
                   <li>
@@ -118,6 +126,28 @@
         </div>
       </div>
     </div>
+
+    <!-- Import modal -->
+    <div class="modal fade" id="importModal{{t.id}}" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">Import {{ t.schema }} from external DB</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+          <form method="post">
+            <div class="modal-body">
+              <label class="form-label">External DATABASE_URL</label>
+              <input class="form-control" name="external_database_url" placeholder="postgresql://user:pass@host:port/db?sslmode=require" required>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" type="submit">Migrate</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
 
     <!-- Terminal modal -->
     <div class="modal fade" id="terminalModal{{t.id}}" tabindex="-1">
