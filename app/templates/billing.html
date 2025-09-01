@@ -60,7 +60,7 @@
               </div>
               <form method="post" action="{{ url_for('dashboard.submit_proof') }}">
                 <div class="modal-body">
-                  <p>You can extend your subscription for <strong>{{ sub.id }}</strong>.</p>
+                  <p>You can extend your subscription for  database <strong>{{ sub.sub_for }}</strong>.</p>
                   <label class="form-label">Select months to extend</label>
                   <select class="form-select" name="months" required>
                     <option value="1">1 month</option>
