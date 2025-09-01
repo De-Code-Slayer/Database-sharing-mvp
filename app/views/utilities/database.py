@@ -7,7 +7,12 @@ from flask import flash
 from app.database.models import DatabaseInstance
 from flask_login import current_user
 import secrets
+import subprocess
+import shlex
 from .payment import create_subscription,delete_subscription
+
+
+HOST = os.getenv('DB_HOST')
 
 
 def save_db_credentials(credentials: dict):
@@ -25,7 +30,7 @@ def save_db_credentials(credentials: dict):
     db_type = credentials.get("db_type", "postgresql")
     user = credentials.get("username", "")
     password = credentials.get("password", "")
-    host = "[HOST]"
+    host = HOST
     port = "[PORT]"
     schema = credentials.get("database", "")
 
@@ -214,7 +219,8 @@ def delete_database_tenant(form):
     pass
 
 
-
+def get_database_instance(id):
+    return DatabaseInstance.query.get(id)
 
 
 
@@ -233,7 +239,23 @@ def create_database(name: str):
     
 
 
-
+def start_psql_session(db_instance: DatabaseInstance):
+    """Start psql process for a given DatabaseInstance"""
+    psql_cmd = (
+        f'psql -U {db_instance.username} '
+        f'-d {db_instance.database_name} '
+        f'-h {HOST} '
+    )
+    env = {"PGPASSWORD": db_instance.password}  # pass password securely via env
+    return subprocess.Popen(
+        shlex.split(psql_cmd),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        env=env
+    )
 
 
 

@@ -11,3 +11,4 @@ email_validator
 Apscheduler
 firebase_admin
 guincorn
+flask_socketio

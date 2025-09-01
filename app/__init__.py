@@ -12,6 +12,7 @@ from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_talisman import Talisman
+from flask_socketio import SocketIO
 from sqlalchemy import create_engine
 
 
@@ -23,7 +24,7 @@ load_dotenv()
 db = SQLAlchemy()
 engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://"))
 csrf = CSRFProtect()
-
+socketio = SocketIO()
 
 
 def create_app(test_config=None):
@@ -42,10 +43,13 @@ def create_app(test_config=None):
    
     # init flask migrate
     migrate = Migrate(app, db)
+    
 
 
     # initialize the app with the extension
     db.init_app(app)
+    # initialize socketio AFTER app is created
+    socketio.init_app(app)
 
    
 
@@ -68,12 +72,14 @@ def create_app(test_config=None):
     from .views.api.api import api_bp
     from .views.auth.auth import auth
     from .views.dashboard.dashboard import dashboard_bp
+    from .views.terminal.terminal import terminal_bp
     
 
         # register blueprints
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(auth)
+    app.register_blueprint(terminal_bp)
 
 
     # register filters 
@@ -142,3 +148,5 @@ def create_app(test_config=None):
     return app
 
 app = create_app()
+
+

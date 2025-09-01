@@ -66,11 +66,11 @@
                     </button>
                   </li>
                   <li>
-                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#terminalModal{{t.id}}" 
-                            disabled data-bs-toggle="tooltip" data-bs-placement="right" 
-                            title="Coming soon">
+                    <!-- <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#terminalModal{{t.id}}" 
+                             >
                       Open Terminal
-                    </button>
+                    </button> -->
+                    <a class="dropdown-item" href="{{url_for('terminal.terminal', db_id=t.id)}}" target="_blank" rel="noopener noreferrer">Open Terminal</a>
                   </li>
                 </span>
                 <li>
@@ -150,14 +150,14 @@
 
 
     <!-- Terminal modal -->
-    <div class="modal fade" id="terminalModal{{t.id}}" tabindex="-1">
+    <!-- <div class="modal fade" id="terminalModal{{t.id}}" tabindex="-1">
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header"><h5 class="modal-title">Open Terminal for {{ t.name }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <!-- Placeholder for terminal -->
+           
             <div class="bg-dark text-white rounded p-3" style="height:400px; overflow:auto;">
               <p class="small text-muted">Interactive terminal coming soon...</p>
               <pre>$ psql {{ t.uri }}</pre>
@@ -165,7 +165,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Delete modal -->
     <div class="modal fade" id="deleteModal{{t.id}}" tabindex="-1">
