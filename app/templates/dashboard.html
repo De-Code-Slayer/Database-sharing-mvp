@@ -168,20 +168,32 @@
     </div> -->
 
     <!-- Delete modal -->
-    <div class="modal fade" id="deleteModal{{t.id}}" tabindex="-1">
+      <div class="modal fade" id="deleteModal{{t.id}}" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header"><h5 class="modal-title">Delete Database {{ t.name }}</h5>
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Database {{ t.name }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <form method="post" action="{{ url_for('dashboard.delete_db') }}">
+
+          <form method="post" action="{{ url_for('dashboard.delete_db') }}" 
+                onsubmit="return validateDelete{{t.id}}(event)">
             <div class="modal-body">
-              <p class="text-danger">Warning: This action cannot be undone. All data in <strong>{{ t.name }}</strong> will be lost.</p>
-              <label class="form-label">Type the database name (<strong>{{ t.name }}</strong>) to confirm:</label>
-              <input type="text" name="confirm_name" class="form-control" placeholder="{{ t.name }}" required>
-              <input type="text" name="name" value="{{ t.name }}" hidden required>
-              <input type="number" name="id" value="{{ t.id }}" hidden required>
+              <p class="text-danger">
+                Warning: This action cannot be undone. All data in <strong>{{ t.name }}</strong> will be lost.
+              </p>
+              <label class="form-label">
+                Type the database name (<strong>{{ t.name }}</strong>) to confirm:
+              </label>
+              <input type="text" id="confirmInput{{t.id}}" name="confirm_name"
+                    class="form-control" placeholder="{{ t.name }}" required>
+              <input type="hidden" name="name" value="{{ t.name }}">
+              <input type="hidden" name="id" value="{{ t.id }}">
+              <div id="errorMsg{{t.id}}" class="text-danger mt-2" style="display:none;">
+                Database name does not match.
+              </div>
             </div>
+
             <div class="modal-footer">
               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
               <button class="btn btn-danger" type="submit">Delete</button>
@@ -190,6 +202,22 @@
         </div>
       </div>
     </div>
+      <script>
+function validateDelete{{t.id}}(event) {
+  const input = document.getElementById("confirmInput{{t.id}}").value.trim();
+  const requiredName = "{{ t.name }}";
+  const errorMsg = document.getElementById("errorMsg{{t.id}}");
+
+  if (input !== requiredName) {
+    event.preventDefault(); // stop form submission
+    errorMsg.style.display = "block";
+    return false;
+  }
+  errorMsg.style.display = "none";
+  return true;
+}
+</script>
+
 
     {% endfor %}
   </div>

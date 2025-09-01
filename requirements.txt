@@ -12,3 +12,5 @@ Apscheduler
 firebase_admin
 guincorn
 flask_socketio
+pytest
+pytest-flask

@@ -34,14 +34,21 @@ class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     LOG_LEVEL = "INFO"
 
+class TestingConfig(BaseConfig):
+    TESTING = True
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL",
+        "postgresql://testuser:testpass@localhost:5432/testdb"
+    )
+    LOG_LEVEL = "DEBUG"
+
+
 config = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,
+    "testing": TestingConfig,
 }
-
-
-
-
 
 
 
