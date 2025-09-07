@@ -162,6 +162,7 @@ def create_sqlite_tenant():
     pass
 
 
+
 def create_database_tenant(form):
     selected = form.db_type.data
     logger.info(f"Creating tenant for DB type: {selected}")

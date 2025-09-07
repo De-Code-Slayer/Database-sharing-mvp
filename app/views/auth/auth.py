@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import  current_user, login_user, logout_user, login_required
-from ..utilities.auth import _login_user, register_user
+from ..utilities.auth import _login_user, register_user, reset_link, reset_password, verify_token
 from app.logger import logger
 from ..forms.forms import RegistrationForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 
@@ -50,39 +50,21 @@ def register():
 def forgot():
     return render_template("auth/forgot.html")
 
-# @auth.post("/forgot")
-# def forgot_post():
-    # email = request.form.get("email","").strip().lower()
-    # user = MyUser.query.filter_by(email=email).first()
-    # if not user:
-    #     flash("If that account exists, a reset link has been generated below.", "info")
-    #     return redirect(url_for("auth.forgot"))
-    # token = _ts().dumps({"uid": user.id})
-    # # In real life, email this. For demo, show on page.
-    # reset_link = url_for("auth.reset", token=token, _external=True)
-    # flash(f"Reset link: {reset_link}", "info")
-    # logger.info({"event": "password_reset_requested", "user": email})
-    # return redirect(url_for("auth.forgot"))
+@auth.post("/forgot")
+def forgot_post():
+    reset_link(request)
+    return redirect(url_for("auth.forgot"))
 
 
-# @auth.post("/reset/<token>")
-# def reset_post(token):
-#     password = request.form.get("password","")
-#     try:
-#         data = _ts().loads(token, max_age=3600)
-#         user = MyUser.query.get(data["uid"])
-#         if not user:
-#             raise BadSignature("no user")
-#         user.set_password(password)
-#         db.session.commit()
-#         flash("Password updated. Please log in.", "success")
-#         logger.info({"event": "password_reset", "user": user.email})
-#         return redirect(url_for("auth.login"))
-#     except SignatureExpired:
-#         flash("Reset link expired", "danger")
-#     except BadSignature:
-#         flash("Invalid reset link", "danger")
-#     return redirect(url_for("auth.forgot"))
+@auth.route("/reset/<token>", methods=["GET","POST"])
+def reset_post(token):
+    # verify token
+    if not verify_token(token):
+        return(request.referrer)
+    if request.method == "POST":
+        if reset_password(request,token):
+            return redirect(url_for("auth.login"))
+    return render_template("auth/reset.html", token=token)
 
 @auth.route("/logout")
 @login_required
