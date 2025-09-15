@@ -61,7 +61,50 @@ def submit_proof():
     return redirect(url_for("dashboard.billing"))
 
 
+@app.route("/upload/<int:user_id>", methods=["POST"])
+def upload_file(user_id):
+    if "file" not in request.files:
+        return {"error": "No file provided"}, 400
 
+    file = request.files["file"]
+    filename = secure_filename(file.filename)
+
+    # Create user-specific folder if not exists
+    user_dir = os.path.join(app.config["UPLOAD_FOLDER"], f"user_{user_id}")
+    os.makedirs(user_dir, exist_ok=True)
+
+    # Save file
+    path = os.path.join(user_dir, filename)
+    file.save(path)
+
+    # Save metadata
+    file_url = f"/files/user_{user_id}/{filename}"
+    size = os.path.getsize(path)
+    mime_type = file.mimetype
+
+    cur.execute(
+        """
+        INSERT INTO files (user_id, filename, url, size, mime_type)
+        VALUES (%s, %s, %s, %s, %s)
+        RETURNING id
+        """,
+        (user_id, filename, file_url, size, mime_type),
+    )
+    conn.commit()
+    file_id = cur.fetchone()[0]
+
+    return {"status": "ok", "file_id": file_id, "url": file_url}
+
+
+@app.route("/files/<int:user_id>/<filename>")
+def serve_file(user_id, filename):
+    user_dir = os.path.join(app.config["UPLOAD_FOLDER"], f"user_{user_id}")
+    file_path = os.path.join(user_dir, filename)
+
+    if not os.path.exists(file_path):
+        abort(404, "File not found")
+
+    return send_from_directory(user_dir, filename)
 
 
 
