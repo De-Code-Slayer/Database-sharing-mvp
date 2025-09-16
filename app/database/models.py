@@ -133,7 +133,7 @@ class Objects(db.Model):
 
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"))   # owner of the file
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id") )   # owner of the file
     storage_id = db.Column(db.Integer, db.ForeignKey("storage_instances.id"), nullable=False)
     filename = db.Column(db.String(255), nullable=False)          # original filename
     url = db.Column(db.String(512), nullable=False)               # path or external URL

@@ -3,6 +3,7 @@ from flask_login import login_required
 from ..forms.forms import CreateTenantForm
 from ..utilities.database import create_database_tenant, delete_database_tenant
 from ..utilities.payment import proccess_proof
+from ..utilities.storage import create_storage
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
 
@@ -51,7 +52,6 @@ def billing():
     return render_template('billing.html')
 
 
-
 @dashboard_bp.route("/submit-proof", methods=["POST"])
 def submit_proof():
     if request.method == "POST":
@@ -60,40 +60,13 @@ def submit_proof():
         return redirect(url_for("dashboard.billing"))
     return redirect(url_for("dashboard.billing"))
 
+@dashboard_bp.post("/storage/create")
+def create_storage_instance():
+   if current_user.storage_instances:
+       flash("Storage instance already exists.", "warning")
+       return redirect(url_for("dashboard.home"))
+   create_storage()
 
-@app.route("/upload/<int:user_id>", methods=["POST"])
-def upload_file(user_id):
-    if "file" not in request.files:
-        return {"error": "No file provided"}, 400
-
-    file = request.files["file"]
-    filename = secure_filename(file.filename)
-
-    # Create user-specific folder if not exists
-    user_dir = os.path.join(app.config["UPLOAD_FOLDER"], f"user_{user_id}")
-    os.makedirs(user_dir, exist_ok=True)
-
-    # Save file
-    path = os.path.join(user_dir, filename)
-    file.save(path)
-
-    # Save metadata
-    file_url = f"/files/user_{user_id}/{filename}"
-    size = os.path.getsize(path)
-    mime_type = file.mimetype
-
-    cur.execute(
-        """
-        INSERT INTO files (user_id, filename, url, size, mime_type)
-        VALUES (%s, %s, %s, %s, %s)
-        RETURNING id
-        """,
-        (user_id, filename, file_url, size, mime_type),
-    )
-    conn.commit()
-    file_id = cur.fetchone()[0]
-
-    return {"status": "ok", "file_id": file_id, "url": file_url}
 
 
 @app.route("/files/<int:user_id>/<filename>")
