@@ -30,26 +30,29 @@ def save_metadata(filename, file_url, size, mime_type):
 
 def upload_file(request):
     if "file" not in request.files:
-        return {"error": "No file provided"}, 400
+        return {"status":"failed", "error": "No file provided"}, 400
 
-    file = request.files["file"]
-    filename = secure_filename(file.filename)
+    try:
+        file = request.files["file"]
+        filename = secure_filename(file.filename)
 
-    # Create user-specific folder if not exists
-    user_dir = current_user.storage_instances.folder_path
-    os.makedirs(user_dir, exist_ok=True)
+        # Create user-specific folder if not exists
+        user_dir = current_user.storage_instances.folder_path
+        os.makedirs(user_dir, exist_ok=True)
 
-    # Save file
-    path = os.path.join(user_dir, filename)
-    file.save(path)
+        # Save file
+        path = os.path.join(user_dir, filename)
+        file.save(path)
 
-    # Save metadata
-    file_url = f"{user_dir}/{filename}"
-    size = os.path.getsize(path)
-    mime_type = file.mimetype
+        # Save metadata
+        file_url = f"{user_dir}/{filename}"
+        size = os.path.getsize(path)
+        mime_type = file.mimetype
 
-    file_id = save_metadata(filename, file_url, size, mime_type)
-
+        file_id = save_metadata(filename, file_url, size, mime_type)
+    except Exception as e:
+        return {"status":"failed", "error": str(e)}, 500
+    
     return {"status": "ok", "file_id": file_id, "url": file_url}
 
 
@@ -67,6 +70,9 @@ def create_storage():
     
     db.session.add(storage)
     db.session.commit()
+    flash("Storage instance created successfully.", "success")
+    return storage
+
 
 
 

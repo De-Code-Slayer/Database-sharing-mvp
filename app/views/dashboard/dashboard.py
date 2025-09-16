@@ -62,22 +62,12 @@ def submit_proof():
 
 @dashboard_bp.post("/storage/create")
 def create_storage_instance():
-   if current_user.storage_instances:
-       flash("Storage instance already exists.", "warning")
-       return redirect(url_for("dashboard.home"))
    create_storage()
+   return redirect(url_for("dashboard.home"))
 
 
 
-@app.route("/files/<int:user_id>/<filename>")
-def serve_file(user_id, filename):
-    user_dir = os.path.join(app.config["UPLOAD_FOLDER"], f"user_{user_id}")
-    file_path = os.path.join(user_dir, filename)
 
-    if not os.path.exists(file_path):
-        abort(404, "File not found")
-
-    return send_from_directory(user_dir, filename)
 
 
 

@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request, abort, send_from_directory
 from ..utilities.storage import upload_file
 
 
@@ -12,12 +12,11 @@ def status():
     return {"status": "API is running"}, 200    
 
 
-@api_bp.route("/upload/<int:user_id>", methods=["POST"])
-def save_object(user_id):
+@api_bp.post("/upload/", methods=["POST"])
+def save_object():
     # handle file upload and save object metadata
-    pass
-
-
+    return upload_file(request)
+    
 
 
 
