@@ -255,7 +255,7 @@ function validateDelete{{t.id}}(event) {
                        value="{{ value }}"
                        id="db-{{ value }}"
                        required>
-                       {% if value == "postgresql" %}
+                       {% if value in  ["postgresql", "storage"] %}
                 <label class="w-100" for="db-{{ value }}">
                   <div class="card h-100 shadow-sm text-center p-3">
                     <img src="{{ image }}" style="height:40px;">

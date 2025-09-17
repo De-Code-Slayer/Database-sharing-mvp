@@ -30,7 +30,10 @@ def select_db():
     form = CreateTenantForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            create_database_tenant(form)
+            if form.db_type.data == "storage":
+                return redirect(url_for("dashboard.create_storage_instance", method="POST"))
+            else:
+                create_database_tenant(form)
         else:
             flash(f"Form validation failed.{form.errors}", "danger")
     return redirect(url_for("dashboard.home"))

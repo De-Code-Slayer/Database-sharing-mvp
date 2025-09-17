@@ -10,6 +10,7 @@ import secrets
 import subprocess
 import shlex
 from .payment import create_subscription,delete_subscription
+from .storage import create_storage
 
 
 HOST = os.getenv('DB_HOST')
@@ -173,6 +174,7 @@ def create_database_tenant(form):
         "mysql":create_mysql_tenant,
         "mongodb":create_mongodb_tenant,
         "sqlite":create_sqlite_tenant,
+        "storage":create_storage,
         "firebase":create_firebase_tenant,
     }
 

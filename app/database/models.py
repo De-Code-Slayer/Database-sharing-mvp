@@ -118,6 +118,7 @@ class StorageInstance(db.Model):
    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"))   # owner of the instance
+    name = db.Column(db.String(50), nullable=False)
     folder_path = db.Column(db.String(512), nullable=False, unique=True)  # e.g. /var/www/storage/user_42
     quota = db.Column(db.BigInteger, default=1073741824)   # default 1GB in bytes
     used_space = db.Column(db.BigInteger, default=0)       # how much user has consumed
@@ -144,7 +145,7 @@ class Objects(db.Model):
     def __repr__(self):
         return f"<File id={self.id} user_id={self.user_id} filename={self.filename}>"
     
-
+    
 
 
 
