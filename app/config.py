@@ -15,6 +15,7 @@ class BaseConfig:
     FLASK_RUN_HOST = os.environ.get("FLASK_RUN_HOST", "127.0.0.1")
     FLASK_RUN_PORT = int(os.environ.get("FLASK_RUN_PORT", 5000))
     FLASK_DEBUG = os.environ.get("FLASK_DEBUG", "false")
+    JWT_SECRET_KEY = "qqq-qqq-qqq-qqq"  # Change this in production
 
 
    
@@ -28,11 +29,13 @@ class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "dev_secret") 
     LOG_LEVEL = "DEBUG"
+    JWT_SECRET_KEY = "dev_jwt_secret"
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     LOG_LEVEL = "INFO"
+    JWT_SECRET_KEY = "dev_jwt_secret"
 
 class TestingConfig(BaseConfig):
     TESTING = True
@@ -42,6 +45,7 @@ class TestingConfig(BaseConfig):
         "postgresql://testuser:testpass@localhost:5432/testdb"
     )
     LOG_LEVEL = "DEBUG"
+    JWT_SECRET_KEY = "dev_jwt_secret"
 
 
 config = {

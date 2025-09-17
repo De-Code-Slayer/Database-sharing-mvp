@@ -13,6 +13,9 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_talisman import Talisman
 from flask_socketio import SocketIO
+from flask_jwt_extended import (
+    JWTManager, create_access_token, jwt_required, get_jwt_identity
+)
 from sqlalchemy import create_engine
 
 
@@ -22,6 +25,7 @@ load_dotenv()
 
 # create the extension
 db = SQLAlchemy()
+jwt = JWTManager()
 engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://"))
 csrf = CSRFProtect()
 socketio = SocketIO()
@@ -50,6 +54,7 @@ def create_app(test_config=None):
     db.init_app(app)
     # initialize socketio AFTER app is created
     socketio.init_app(app)
+    jwt.init_app(app)
 
    
 
