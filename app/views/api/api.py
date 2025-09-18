@@ -12,7 +12,7 @@ def status():
     return {"status": True}, 200    
 
 
-@api_bp.post("/upload/", methods=["POST"])
+@api_bp.post("/upload/")
 def save_object():
     return upload_file(request)
     

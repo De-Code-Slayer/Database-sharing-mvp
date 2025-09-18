@@ -33,7 +33,10 @@ class CreateTenantForm(FlaskForm):
     #  name = StringField("Database Name", validators=[DataRequired()])
      db_type = SelectField(
         "Database Type",
-        choices=[("postgresql", "PostgreSQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"), ("mysql", "MySQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"), ("mongodb", "MongoDB", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"), ("storage", "Storage","https://img.icons8.com/?size=100&id=112470&format=png&color=FFFFFF")],
+        choices=[("postgresql", "PostgreSQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"),
+                  ("mysql", "MySQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"),
+                    ("mongodb", "MongoDB", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"),
+                      ("storage", "Storage","https://img.icons8.com/?size=40&id=23275&format=png&color=EA4411")],
         validators=[DataRequired()]
                              ) 
      submit = SubmitField("Create")

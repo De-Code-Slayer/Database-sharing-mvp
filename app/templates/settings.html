@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Database Sharing App{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Settings</h2>
+
+    <!-- OAuth / 2FA Setup -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">OAuth &amp; 2FA</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Secure your account with OAuth providers and two-factor authentication.</p>
+
+            <form method="post" action="{{ url_for('settings.enable_2fa') }}">
+                <div class="mb-3">
+                    <label for="oauthProvider" class="form-label">Link OAuth Provider</label>
+                    <select class="form-select" id="oauthProvider" name="provider">
+                        <option value="">Choose...</option>
+                        <option value="google">Google</option>
+                        <option value="github">GitHub</option>
+                        <option value="microsoft">Microsoft</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Link Account</button>
+            </form>
+
+            <hr>
+
+            <form method="post" action="{{ url_for('settings.setup_2fa') }}">
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number for 2FA</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="+1234567890">
+                </div>
+                <button type="submit" class="btn btn-success">Enable 2FA</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- API Keys -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">API Keys</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Use API keys to authenticate when programmatically accessing your databases.</p>
+
+            {% if api_keys %}
+                <ul class="list-group mb-3">
+                    {% for key in api_keys %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ key.masked }}</span>
+                            <form method="post" action="{{ url_for('settings.revoke_api_key', key_id=key.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">You don’t have any API keys yet.</p>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('settings.create_api_key') }}">
+                <button type="submit" class="btn btn-primary">Generate New API Key</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

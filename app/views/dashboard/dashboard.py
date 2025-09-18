@@ -31,7 +31,7 @@ def select_db():
     if request.method == "POST":
         if form.validate_on_submit():
             if form.db_type.data == "storage":
-                return redirect(url_for("dashboard.create_storage_instance", method="POST"))
+                return redirect(url_for("dashboard.create_storage_instance"))
             else:
                 create_database_tenant(form)
         else:
@@ -63,7 +63,7 @@ def submit_proof():
         return redirect(url_for("dashboard.billing"))
     return redirect(url_for("dashboard.billing"))
 
-@dashboard_bp.post("/storage/create")
+@dashboard_bp.get("/storage/create")
 def create_storage_instance():
    create_storage()
    return redirect(url_for("dashboard.home"))
