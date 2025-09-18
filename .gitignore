@@ -9,3 +9,6 @@ __pycache__/
 # ignore instance folder
 instance/
 migrations/
+# ignore client_secrets.json file
+client_secret.json
+# ignore SQLite database files
