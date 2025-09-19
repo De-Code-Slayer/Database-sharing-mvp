@@ -1,8 +1,13 @@
-from app.database.models import MyUser
+from app.database.models import MyUser, ApiKey
 import os
 from app.logger import logger
-from flask import flash, url_for
+from flask import flash, url_for, request
+import hashlib
+from flask_login import current_user
 from app import db
+from flask_jwt_extended import (
+    JWTManager, create_access_token, jwt_required, get_jwt_identity
+)
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 def _ts():
@@ -71,6 +76,29 @@ def reset_password(request,token):
         flash("Reset link expired", "danger")
     except BadSignature:
         flash("Invalid reset link", "danger")
+
+
+def generate_api_key():
+    api_key = ApiKey.generate_for_user(current_user.id)
+    flash("API key generated", "success")
+    flash(f"Your new API key: {api_key} . Please copy it now. You won't see it again!", "info")
+    logger.info({"event": "api_key_created", "user": current_user.email})
+    return api_key
+
+def api_key_auth():
+    """Authenticate API key from Authorization header and set current_user"""
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        logger.warning({"event": "api_key_missing", "detail": "No Authorization header"})
+        return None
+
+    raw_key = auth_header.split(" ")[1]
+    key_hash = hashlib.sha256(raw_key.encode()).hexdigest()
+    api_key = ApiKey.query.filter_by(key_hash=key_hash, revoked=False).first()
+
+    if api_key:
+        return api_key.user
+    return None
 
 
 

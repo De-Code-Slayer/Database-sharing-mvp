@@ -4,6 +4,7 @@ from ..forms.forms import CreateTenantForm
 from ..utilities.database import create_database_tenant, delete_database_tenant
 from ..utilities.payment import proccess_proof
 from ..utilities.storage import create_storage
+from ..utilities.auth import generate_api_key
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
 
@@ -69,11 +70,22 @@ def create_storage_instance():
    return redirect(url_for("dashboard.home"))
 
 
+@dashboard_bp.route("/settings")
+@login_required
+def settings():
+    return render_template("settings.html")
 
+@dashboard_bp.route("/2fa")
+@login_required
+def two_fa():
+    return render_template("2fa.html")
 
+@dashboard_bp.post("/create-api-key")
+@login_required
+def create_api_key():
 
-
-
+    generate_api_key()
+    return redirect(url_for("dashboard.settings"))
 
 
 

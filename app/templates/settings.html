@@ -14,7 +14,7 @@
         <div class="card-body">
             <p class="text-muted">Secure your account with OAuth providers and two-factor authentication.</p>
 
-            <form method="post" action="{{ url_for('settings.enable_2fa') }}">
+            <form method="post" action="">
                 <div class="mb-3">
                     <label for="oauthProvider" class="form-label">Link OAuth Provider</label>
                     <select class="form-select" id="oauthProvider" name="provider">
@@ -29,7 +29,7 @@
 
             <hr>
 
-            <form method="post" action="{{ url_for('settings.setup_2fa') }}">
+            <form method="post" action="">
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number for 2FA</label>
                     <input type="text" class="form-control" id="phone" name="phone" placeholder="+1234567890">
@@ -47,22 +47,26 @@
         <div class="card-body">
             <p class="text-muted">Use API keys to authenticate when programmatically accessing your databases.</p>
 
-            {% if api_keys %}
+            {% if current_user.api_key %}
                 <ul class="list-group mb-3">
-                    {% for key in api_keys %}
+                    {% for api_key in current_user.api_key %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>{{ key.masked }}</span>
-                            <form method="post" action="{{ url_for('settings.revoke_api_key', key_id=key.id) }}">
+                            <span>{{ api_key.masked }}</span>
+                            <!-- copy button -->
+                             <!-- <button class="btn btn-outline-secondary btn-sm" onclick="navigator.clipboard.writeText('{{ api_key.key_hash }}')">Copy</button> -->
+                             <!-- revoke button -->
+                            <form method="post" action="">
                                 <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
                             </form>
                         </li>
                     {% endfor %}
+                    
                 </ul>
             {% else %}
                 <p class="text-muted">You don’t have any API keys yet.</p>
             {% endif %}
 
-            <form method="post" action="{{ url_for('settings.create_api_key') }}">
+            <form method="post" action="{{ url_for('dashboard.create_api_key') }}">
                 <button type="submit" class="btn btn-primary">Generate New API Key</button>
             </form>
         </div>

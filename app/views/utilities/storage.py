@@ -20,7 +20,7 @@ def save_metadata(filename, file_url, size, mime_type):
         user_id=current_user.id,
         storage_id=current_user.storage_instances.id,
         filename=filename,
-        furl=file_url,
+        url=file_url,
         size=size,
         mime_type=mime_type
     )
@@ -47,7 +47,10 @@ def upload_file(request):
 
         # Save file
         path = os.path.join(user_dir, filename)
-        size = os.path.getsize(path)
+        # Check quota BEFORE saving
+        file.seek(0, os.SEEK_END)         # move cursor to end
+        size = file.tell()                # get size in bytes
+        file.seek(0)                      # reset cursor for saving
 
         # Check quota
         if instance.used_space + size > instance.quota:

@@ -1,7 +1,7 @@
 
 
 from flask import (Flask, request,
- render_template
+ render_template,jsonify
 )
 from .logger import logger
 from .config import config
@@ -13,9 +13,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_talisman import Talisman
 from flask_socketio import SocketIO
-from flask_jwt_extended import (
-    JWTManager, create_access_token, jwt_required, get_jwt_identity
-)
+from flask_jwt_extended import JWTManager
 from sqlalchemy import create_engine
 
 
@@ -114,7 +112,7 @@ def create_app(test_config=None):
     @app.errorhandler(500)
     def server_error(e):
         # note that we set the 500 status explicitly
-        return render_template("error/pages-misc-error.html"), 500
+        return jsonify({"status":"failed", "error":e}), 500
 
     @app.errorhandler(401)
     def unauthorized(e):

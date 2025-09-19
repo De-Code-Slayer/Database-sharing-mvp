@@ -1,6 +1,8 @@
 from app import db
 from datetime import datetime
 from flask_login import UserMixin
+import secrets
+import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -16,10 +18,11 @@ class MyUser(db.Model, UserMixin):
 
     # relationship to DatabaseInstance
     instances = db.relationship('DatabaseInstance', backref='owner', lazy=True)
-    storage_instances = db.relationship('StorageInstance', backref='owner', lazy=True)
+    storage_instances = db.relationship('StorageInstance', backref='owner', lazy=True, uselist=False)
     subscriptions = db.relationship("Subscription", backref="user", lazy=True)
     invoices = db.relationship("Invoice", backref="user", lazy=True)
     objects = db.relationship("Objects", backref="user", lazy=True)
+    api_key = db.relationship("ApiKey", backref="user", lazy=True)  # for API access
     
 
     def set_password(self, raw):
@@ -28,17 +31,6 @@ class MyUser(db.Model, UserMixin):
     def check_password(self, raw):
         return check_password_hash(self.password_hash, raw)
 
-
-
-# class Tenant(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-#     tenant_key = db.Column(db.String(32), unique=True, nullable=False)
-#     role = db.Column(db.String(80), nullable=False)
-#     schema = db.Column(db.String(80), nullable=False)
-#     last_env_url = db.Column(db.Text, nullable=True)
-#     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-#     owner = db.relationship("MyUser", backref=db.backref("tenants", lazy=True))
 
 
 class DatabaseInstance(db.Model):
@@ -130,6 +122,7 @@ class StorageInstance(db.Model):
     def __repr__(self):
         return f"<StorageInstance id={self.id} user_id={self.user_id} quota={self.quota} used={self.used_space}>"
 
+
 class Objects(db.Model):
 
 
@@ -146,8 +139,30 @@ class Objects(db.Model):
         return f"<File id={self.id} user_id={self.user_id} filename={self.filename}>"
     
     
+class ApiKey(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"), nullable=False)
+    key_hash = db.Column(db.String(128), nullable=False, unique=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    revoked = db.Column(db.Boolean, default=False)
 
+    @staticmethod
+    def generate_for_user(user_id):
+        # Generate a random key (like Stripe/Paystack style)
+        raw_key = "sk_live_" + secrets.token_urlsafe(32)  # human-usable
+        key_hash = hashlib.sha256(raw_key.encode()).hexdigest()
 
+        api_key = ApiKey(user_id=user_id, key_hash=key_hash)
+        db.session.add(api_key)
+        db.session.commit()
+
+        return raw_key  # return plain key ONCE to user
+    
+    @property
+    def masked(self):
+        # Show only the first 6 and last 4 characters
+        # Example: sk_live_C4I4pJ...HFI
+        return f"{self.key_hash[:6]}...{self.key_hash[-4:]}"
 
 
 
