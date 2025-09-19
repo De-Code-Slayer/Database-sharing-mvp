@@ -33,44 +33,48 @@ def upload_file(request):
     if "file" not in request.files:
         return {"status":"failed", "error": "No file provided"}, 400
     
-    # check storage quota
-    
-
     try:
         file = request.files["file"]
         filename = secure_filename(file.filename)
 
         instance = current_user.storage_instances
+
         # Create user-specific folder if not exists
         user_dir = current_user.storage_instances.folder_path
         os.makedirs(user_dir, exist_ok=True)
 
-        # Save file
         path = os.path.join(user_dir, filename)
-        # Check quota BEFORE saving
-        file.seek(0, os.SEEK_END)         # move cursor to end
-        size = file.tell()                # get size in bytes
-        file.seek(0)                      # reset cursor for saving
 
-        # Check quota
-        if instance.used_space + size > instance.quota:
+        # Get uploaded file size
+        file.seek(0, os.SEEK_END)
+        size = file.tell()
+        file.seek(0)
+
+        # Get existing file size (if file already exists)
+        old_size = os.path.getsize(path) if os.path.exists(path) else 0
+
+        # Calculate new used space after replacement
+        new_used_space = instance.used_space - old_size + size
+
+        # Check quota BEFORE saving
+        if new_used_space > instance.quota:
             return {"status":"failed", "error": "Storage quota exceeded"}, 400
-        
+
+        # Save file
         file.save(path)
 
         # Save metadata
         file_url = f"{user_dir}/{filename}"
-        
         mime_type = file.mimetype
-
         file_id = save_metadata(filename, file_url, size, mime_type)
+
+        # Update quota
+        instance.used_space = new_used_space
+        db.session.commit()
+
     except Exception as e:
         return {"status":"failed", "error": str(e)}, 500
-    
-    # Update quota
-    instance.used_space += size
-    db.session.commit()
-    
+
     return {"status": "ok", "file_id": file_id, "url": file_url}
 
 
