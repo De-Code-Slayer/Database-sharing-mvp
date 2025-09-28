@@ -1,0 +1,50 @@
+
+
+{% extends "base.html" %}
+{% set active_page = 'Objects' %}
+{% block title %}Objects | Small Shardz{% endblock %}
+{% block content %}
+
+    <div class="container mt-5">
+        <h2 class="mb-4">📂 Your Storage</h2>
+
+        {% if files %}
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Filename</th>
+                        <th>Type</th>
+                        <th>Size (KB)</th>
+                        <th>Preview</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>{{ file.filename }}</td>
+                        <td>{{ file.mime_type }}</td>
+                        <td>{{ "%.2f"|format(file.size / 1024) }}</td>
+                        <td>
+                            {% if "image" in file.mime_type %}
+                                <img src="{{ file.url }}" alt="{{ file.filename }}" style="max-width:100px; max-height:100px;">
+                            {% else %}
+                                <span class="text-muted">No preview</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ file.url }}" class="btn btn-sm btn-primary" download>Download</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info">
+                You haven’t uploaded any files yet.
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+

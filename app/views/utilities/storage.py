@@ -102,7 +102,14 @@ def create_storage():
     return storage
 
 
-
+def get_objects_by_id(storage_id):
+    storage = StorageInstance.query.filter_by(id=storage_id, user_id=current_user.id).first()
+    if not storage:
+        flash("Storage instance not found.", "danger")
+        return []
+    
+    files = Objects.query.filter_by(storage_id=storage.id).all()
+    return files
 
 
 

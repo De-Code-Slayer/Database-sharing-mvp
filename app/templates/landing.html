@@ -3,110 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Launch unlimited databases in one click. Affordable, secure, and developer-friendly. Free migration support both ways. Perfect for startups, MVPs, data science, and learning.">
+  <meta name="description" content="Launch free databases and object storage in one click. Affordable, secure, and developer-friendly. Free migration support both ways. Perfect for startups, MVPs, data science, and learning.">
   <meta name="keywords" content="database hosting, affordable database, managed db, pay as you go, MVP database, data science database, SQL hosting">
-  <meta name="author" content="YourCompanyName">
-  <title>Affordable & Secure Database Hosting | YourCompanyName</title>
+  <meta name="author" content="SmallShardz">
+  <title>Affordable & Secure Database Hosting | SmallShardz</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .orange-accent { background-color: #F5A623; }
+    .orange-accent:hover { background-color: #e6951b; }
+    .yellow-bg { background-color: #FFF7E0; }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card-hover:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    nav { backdrop-filter: blur(10px); background: rgba(243, 244, 246, 0.9); border-bottom: 1px solid #e5e7eb; }
+    .section-divider { border-top: 1px solid #F5A623; }
+  </style>
+  <script>
+    // Add fade-in effect on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const elements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      elements.forEach(el => observer.observe(el));
+    });
+  </script>
 </head>
-<body class="bg-white text-black font-sans">
+<body class="bg-white text-black">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full z-10 py-4 px-6 flex justify-between items-center">
+    <div class="text-2xl font-bold text-black">SmallShardz</div>
+    <div class="space-x-4">
+      <a href="#features" class="hover:text-gray-600 transition">Features</a>
+      <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
+      <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
+      <a href="#signup" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">Get Started</a>
+    </div>
+  </nav>
+
   <!-- Hero Section -->
-  <section class="text-center py-16 px-6 bg-black text-white">
-    <h1 class="text-4xl md:text-5xl font-bold mb-4">Unlimited Database Hosting</h1>
-    <p class="text-lg md:text-xl mb-6">Create as many DBs as you need. Only billed at the end of the month. Start from just $4.</p>
-    <a href="{{url_for('dashboard.home')}}" class="bg-white text-black px-6 py-3 rounded-2xl font-semibold shadow-md hover:bg-gray-100 transition">Create Your First DB</a>
+  <section class="min-h-screen flex items-center justify-center text-center py-20 px-6 bg-gray-100 fade-in">
+    <div>
+      <h1 class="text-5xl md:text-7xl font-extrabold mb-6">Free Database Hosting</h1>
+      <p class="text-xl md:text-2xl mb-10 text-gray-600 max-w-3xl mx-auto">Create as many DBs as you need. Only billed at the end of the month. Start from just $4.</p>
+      <a href="{{url_for('dashboard.home')}}" class="orange-accent text-black px-10 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition">Create Your First DB</a>
+    </div>
+  </section>
+
+  <!-- Supported Databases Section -->
+  <section id="databases" class="py-24 px-6 text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-12">Supported Databases</h2>
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" class="h-20 mx-auto mb-6">
+        <p class="font-semibold text-xl">PostgreSQL</p>
+      </div>
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="h-20 mx-auto mb-6">
+        <p class="font-semibold text-xl">MySQL</p>
+      </div>
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="h-20 mx-auto mb-6">
+        <p class="font-semibold text-xl">MongoDB</p>
+      </div>
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover">
+        <img src="https://img.icons8.com/?size=40&id=23275&format=png&color=EA4411" alt="Storage" class="h-20 mx-auto mb-6">
+        <p class="font-semibold text-xl">Storage</p>
+      </div>
+    </div>
   </section>
 
   <!-- Features Section -->
-  <section class="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
-    <div class="p-6 bg-black text-white rounded-2xl shadow">
-      <div class="text-5xl mb-4">💸</div>
-      <h3 class="text-xl font-bold mb-2">Affordable & Transparent</h3>
-      <p>Pricing starts at just $4/month. Pay-as-you-go flexibility or fixed pricing—you choose.</p>
-    </div>
-    <div class="p-6 bg-black text-white rounded-2xl shadow">
-      <div class="text-5xl mb-4">⚡</div>
-      <h3 class="text-xl font-bold mb-2">1-Click Setup</h3>
-      <p>Create fully managed databases instantly. Ideal for project starters, MVPs, and learning.</p>
-    </div>
-    <div class="p-6 bg-black text-white rounded-2xl shadow">
-      <div class="text-5xl mb-4">🔒</div>
-      <h3 class="text-xl font-bold mb-2">Secure & Reliable</h3>
-      <p>Strong encryption and free backups (not daily, but always included) to keep your data safe.</p>
+  <section id="features" class="py-24 px-6 bg-white text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-16">Why Choose Us?</h2>
+    <div class="max-w-6xl mx-auto space-y-16">
+      <!-- Affordable & Transparent -->
+      <div class="flex flex-col md:flex-row items-center gap-10">
+        <div class="md:w-1/2 text-left">
+          <h3 class="text-3xl font-bold mb-4">Affordable & Transparent</h3>
+          <p class="text-lg text-gray-600 mb-4">Pricing starts at just $4/month. Pay-as-you-go flexibility or fixed pricing—you choose.</p>
+          <p class="text-gray-600">Our transparent pricing model ensures no hidden fees. Scale your database usage without worrying about unexpected costs, with clear billing at month-end.</p>
+        </div>
+        <div class="md:w-1/2">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Pricing Chart" class="w-full h-64 object-cover rounded-lg">
+          <!-- Free stock photo from Unsplash: Pricing chart illustration -->
+        </div>
+      </div>
+      <!-- 1-Click Setup -->
+      <div class="flex flex-col md:flex-row-reverse items-center gap-10">
+        <div class="md:w-1/2 text-left">
+          <h3 class="text-3xl font-bold mb-4">1-Click Setup</h3>
+          <p class="text-lg text-gray-600 mb-4">Create fully managed databases instantly. Ideal for project starters, MVPs, and learning.</p>
+          <p class="text-gray-600">Launch databases in seconds with our intuitive interface. No complex configurations—perfect for rapid prototyping or educational environments.</p>
+        </div>
+        <div class="md:w-1/2">
+          <img src="https://images.unsplash.com/photo-1555066931-4365a22d1356?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Dashboard Setup UI" class="w-full h-64 object-cover rounded-lg">
+          <!-- Free stock photo from Unsplash: Dashboard UI -->
+        </div>
+      </div>
+      <!-- Secure & Reliable -->
+      <div class="flex flex-col md:flex-row items-center gap-10">
+        <div class="md:w-1/2 text-left">
+          <h3 class="text-3xl font-bold mb-4">Secure & Reliable</h3>
+          <p class="text-lg text-gray-600 mb-4">Strong encryption and free backups (not daily, but always included) to keep your data safe.</p>
+          <p class="text-gray-600">Enterprise-grade encryption and automated backups ensure your data is protected. Our 99.9% uptime guarantee keeps your databases running smoothly.</p>
+        </div>
+        <div class="md:w-1/2">
+          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Security Lock" class="w-full h-64 object-cover rounded-lg">
+          <!-- Free stock photo from Unsplash: Security lock -->
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Migration Section -->
-  <section class="py-16 px-6 bg-gray-100 text-center">
-    <h2 class="text-3xl font-bold mb-6">Migration Without Lock-In</h2>
-    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <h3 class="text-xl font-semibold mb-2">📥 Free Migration To Us</h3>
-        <p>Move your data in with zero hassle—we’ll handle it for free.</p>
+  <section class="py-24 px-6 bg-gray-100 text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-12">Migration Without Lock-In</h2>
+    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+      <div class="p-10 bg-white rounded-2xl shadow-lg card-hover">
+        <h3 class="text-2xl font-semibold mb-4">Free Migration To Us</h3>
+        <p class="text-gray-600 text-lg">Move your data in with zero hassle—we’ll handle it for free.</p>
       </div>
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <h3 class="text-xl font-semibold mb-2">📤 Free Migration Away</h3>
-        <p>Leaving? We’ll help you export everything—no vendor lock-in.</p>
+      <div class="p-10 bg-white rounded-2xl shadow-lg card-hover">
+        <h3 class="text-2xl font-semibold mb-4">Free Migration Away</h3>
+        <p class="text-gray-600 text-lg">Leaving? We’ll help you export everything—no vendor lock-in.</p>
       </div>
     </div>
   </section>
 
   <!-- Use Cases -->
-  <section class="py-16 px-6 max-w-6xl mx-auto text-center">
-    <h2 class="text-3xl font-bold mb-8">Built For Everyone</h2>
-    <div class="grid md:grid-cols-4 gap-6">
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <div class="text-4xl mb-2">🚀</div>
-        <p>Project Starters</p>
+  <section class="py-24 px-6 yellow-bg text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-12">Built For Everyone</h2>
+    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="p-6 bg-white rounded-2xl shadow-lg card-hover">
+        <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/startup-rocket-launch-icon.svg" alt="Project Starters" class="w-16 h-16 mx-auto mb-4">
+        <!-- Free SVG icon from UXWing: Startup Rocket Launch -->
+        <p class="text-gray-600 font-semibold text-lg">Project Starters</p>
       </div>
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <div class="text-4xl mb-2">💡</div>
-        <p>MVP Builders</p>
+      <div class="p-6 bg-white rounded-2xl shadow-lg card-hover">
+        <img src="https://www.svgrepo.com/show/494097/light-bulb.svg" alt="MVP Builders" class="w-16 h-16 mx-auto mb-4">
+        <!-- Free SVG icon from SVG Repo: Light Bulb -->
+        <p class="text-gray-600 font-semibold text-lg">MVP Builders</p>
       </div>
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <div class="text-4xl mb-2">📊</div>
-        <p>Data Scientists</p>
+      <div class="p-6 bg-white rounded-2xl shadow-lg card-hover">
+        <img src="https://www.flaticon.com/free-icon/graph_10542453?term=data+chart" alt="Data Scientists" class="w-16 h-16 mx-auto mb-4">
+        <!-- Free icon from Flaticon: Data Chart (use direct SVG download link in practice) -->
+        <p class="text-gray-600 font-semibold text-lg">Data Scientists</p>
       </div>
-      <div class="p-6 bg-black text-white rounded-2xl shadow">
-        <div class="text-4xl mb-2">📚</div>
-        <p>Learners & Students</p>
+      <div class="p-6 bg-white rounded-2xl shadow-lg card-hover">
+        <img src="https://uxwing.com/wp-content/themes/uxwing/download/07-education-school/graduation-cap-icon.svg" alt="Learners & Students" class="w-16 h-16 mx-auto mb-4">
+        <!-- Free SVG icon from UXWing: Graduation Cap -->
+        <p class="text-gray-600 font-semibold text-lg">Learners & Students</p>
       </div>
     </div>
   </section>
 
   <!-- Pricing Section -->
-  <section class="py-16 px-6 bg-black text-white text-center">
-    <h2 class="text-3xl font-bold mb-8">Simple Pricing</h2>
-    <p class="mb-6">Unlimited databases. Only billed at month-end. Free backups included.</p>
-    <div class="max-w-3xl mx-auto grid md:grid-cols-3 gap-6">
-      <div class="p-6 bg-white text-black rounded-2xl shadow">
-        <h3 class="text-xl font-bold mb-2">Starter</h3>
-        <p class="mb-4">Create unlimited DBs. First invoice at month-end.</p>
-        <p class="font-bold">From $4/mo</p>
+  <section id="pricing" class="py-24 px-6 bg-gray-100 text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-12">Simple Pricing</h2>
+    <p class="mb-8 text-gray-600 text-xl">Unlimited databases. Only billed at month-end. Free backups included.</p>
+    <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+      <div class="p-10 bg-white rounded-2xl shadow-lg card-hover border border-gray-200">
+        <h3 class="text-2xl font-bold mb-4">Starter</h3>
+        <p class="mb-4 text-gray-600 text-lg">Create unlimited DBs. First invoice at month-end.</p>
+        <p class="font-bold text-xl">From $4/mo</p>
       </div>
-      <div class="p-6 bg-gray-900 rounded-2xl shadow">
-        <h3 class="text-xl font-bold mb-2">Pay As You Go</h3>
-        <p class="mb-4">Flexible usage-based pricing. Scale freely.</p>
-        <p class="font-bold">Usage-based</p>
+      <div class="p-10 bg-white rounded-2xl shadow-lg card-hover border border-orange-500">
+        <h3 class="text-2xl font-bold mb-4">Pay As You Go</h3>
+        <p class="mb-4 text-gray-600 text-lg">Flexible usage-based pricing. Scale freely.</p>
+        <p class="font-bold text-xl">Usage-based</p>
       </div>
-      <div class="p-6 bg-white text-black rounded-2xl shadow">
-        <h3 class="text-xl font-bold mb-2">Fixed Price</h3>
-        <p class="mb-4">Predictable monthly cost. Peace of mind included.</p>
-        <p class="font-bold">Starts at $4/mo</p>
+      <div class="p-10 bg-white rounded-2xl shadow-lg card-hover border border-gray-200">
+        <h3 class="text-2xl font-bold mb-4">Fixed Price</h3>
+        <p class="mb-4 text-gray-600 text-lg">Predictable monthly cost. Peace of mind included.</p>
+        <p class="font-bold text-xl">Starts at $4/mo</p>
       </div>
     </div>
   </section>
 
   <!-- Call to Action -->
-  <section id="signup" class="py-16 px-6 text-center">
-    <h2 class="text-3xl font-bold mb-4">Spin Up Your Database Today</h2>
-    <p class="mb-6">Unlimited databases, free backups, free migrations. Starting at just $4/month.</p>
-    <a href="{{url_for('dashboard.home')}}" class="bg-black text-white px-8 py-4 rounded-2xl font-semibold shadow hover:bg-gray-800 transition">Get Started</a>
+  <section id="signup" class="py-24 px-6 bg-white text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-8">Spin Up Your Database Today</h2>
+    <p class="mb-10 text-gray-600 text-xl max-w-2xl mx-auto">Unlimited databases, free backups, free migrations. Starting at just $4/month.</p>
+    <a href="{{url_for('dashboard.home')}}" class="orange-accent text-black px-12 py-5 rounded-full font-semibold text-xl shadow-lg hover:shadow-xl transition">Get Started</a>
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 bg-black text-gray-400 text-center text-sm">
-    <p>&copy; 2025 YourCompanyName. All rights reserved.</p>
+  <footer class="py-12 bg-gray-100 text-gray-600 text-center text-sm section-divider">
+    <p>&copy; 2025 SmallShardz. All rights reserved.</p>
     <p class="mt-2">Affordable, Secure, and Scalable Database Hosting.</p>
   </footer>
 </body>

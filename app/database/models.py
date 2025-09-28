@@ -138,6 +138,29 @@ class Objects(db.Model):
     def __repr__(self):
         return f"<File id={self.id} user_id={self.user_id} filename={self.filename}>"
     
+    def delete_object(self):
+        import os
+        try:
+            if os.path.exists(self.url):
+                if os.remove(self.url):
+                    # update quota
+                    if self.size and self.storage:
+                        self.storage.used_space = max(0, self.storage.used_space - self.size)
+                    # delete db record
+                    db.session.delete(self)
+                    db.session.commit()
+                       
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error deleting file: {e}")
+            return False
+      
+            
+        
+    
+    
     
 class ApiKey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
