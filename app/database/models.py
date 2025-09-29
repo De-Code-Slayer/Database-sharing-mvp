@@ -121,6 +121,28 @@ class StorageInstance(db.Model):
 
     def __repr__(self):
         return f"<StorageInstance id={self.id} user_id={self.user_id} quota={self.quota} used={self.used_space}>"
+    
+    def delete_instance(self):
+        import shutil, os
+        import logging
+        try:
+            if os.path.exists(self.folder_path):
+                shutil.rmtree(self.folder_path)
+            # delete all associated files records
+            for file in self.files:
+                db.session.delete(file)
+            #delete subscription
+            if self.owner and self.owner.subscriptions:
+                for sub in self.owner.subscriptions:
+                    if sub.sub_for == self.name:
+                        db.session.delete(sub)
+            # delete the storage instance record
+            db.session.delete(self)
+            db.session.commit()
+            return True
+        except Exception as e:
+            logging.error(f"Error deleting storage instance: {e}")
+            return False
 
 
 class Objects(db.Model):
@@ -156,11 +178,7 @@ class Objects(db.Model):
         except Exception as e:
             print(f"Error deleting file: {e}")
             return False
-      
-            
         
-    
-    
     
 class ApiKey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -186,6 +204,18 @@ class ApiKey(db.Model):
         # Show only the first 6 and last 4 characters
         # Example: sk_live_C4I4pJ...HFI
         return f"{self.key_hash[:6]}...{self.key_hash[-4:]}"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

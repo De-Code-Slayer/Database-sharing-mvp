@@ -22,8 +22,12 @@
       <button class="btn btn-outline-secondary me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
         ☰
       </button>
+      <!-- logo -->
+       <a href="">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="Logo" width="150" height="70" class="d-inline-block align-text-top">
+       </a>
 
-      <a class="navbar-brand fw-semibold" href="{{ url_for('dashboard.home') }}">Database for MVP</a>
+      <!-- <a class="navbar-brand fw-semibold" href="{{ url_for('dashboard.home') }}">Small Shardz</a> -->
 
       <div class="d-flex">
         {% if current_user.is_authenticated %}

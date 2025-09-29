@@ -221,6 +221,13 @@ def delete_database_tenant(form):
 
     pass
 
+def delete_storage_instances():
+    
+    if current_user.storage_instances.delete_instance():
+        flash("Storage instance deleted successfully.", "success")
+    else:
+        flash("Error deleting storage instance.", "danger")
+
 
 def get_database_instance(id):
     return DatabaseInstance.query.get(id)

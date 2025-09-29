@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from ..forms.forms import CreateTenantForm
-from ..utilities.database import create_database_tenant, delete_database_tenant
+from ..utilities.database import create_database_tenant, delete_database_tenant, delete_storage_instances
 from ..utilities.payment import proccess_proof
 from ..utilities.storage import create_storage, get_objects_by_id
 from ..utilities.auth import generate_api_key
@@ -74,6 +74,13 @@ def create_storage_instance():
 def view_storage(storage_id):
     files = get_objects_by_id(storage_id)
     return render_template("view_storage.html", files=files)
+
+@dashboard_bp.post("/delete/instance")
+@login_required
+def delete_storage_instance():
+    delete_storage_instances()
+    return redirect(url_for("dashboard.home"))
+    
 
 @dashboard_bp.route("/settings")
 @login_required
