@@ -15,6 +15,7 @@ from flask_talisman import Talisman
 from flask_socketio import SocketIO
 from flask_jwt_extended import JWTManager
 from sqlalchemy import create_engine
+from authlib.integrations.flask_client import OAuth
 
 
 
@@ -27,6 +28,10 @@ jwt = JWTManager()
 engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://"))
 csrf = CSRFProtect()
 socketio = SocketIO()
+
+# Authlib OAuth setup
+oauth = OAuth()
+
 
 
 def create_app(test_config=None):
@@ -53,6 +58,8 @@ def create_app(test_config=None):
     # initialize socketio AFTER app is created
     socketio.init_app(app)
     jwt.init_app(app)
+
+    oauth.init_app(app)
 
    
 

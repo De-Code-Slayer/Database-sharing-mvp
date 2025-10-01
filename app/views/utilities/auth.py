@@ -24,6 +24,8 @@ def _login_user(request):
             return False
     return user
 
+def get_user_by_email(email):
+    return MyUser.query.filter_by(email=email).first()
 
 def register_user(form):
     email = form.email.data.strip().lower()
@@ -38,6 +40,12 @@ def register_user(form):
     db.session.commit()
     logger.info({"event": "register", "user": email})
     return user
+
+def create_user(email,username,method="Google"): 
+        user = MyUser(email=email, username=username, authentication_method=method)
+        db.session.add(user)
+        db.session.commit()
+        return user
 
 
 def reset_link(request):

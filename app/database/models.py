@@ -11,8 +11,9 @@ class MyUser(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    authentication_method = db.Column(db.String(20), default="Email/Password")  # local, google, github
 
 
 
@@ -23,6 +24,7 @@ class MyUser(db.Model, UserMixin):
     invoices = db.relationship("Invoice", backref="user", lazy=True)
     objects = db.relationship("Objects", backref="user", lazy=True)
     api_key = db.relationship("ApiKey", backref="user", lazy=True)  # for API access
+
     
 
     def set_password(self, raw):
