@@ -6,7 +6,7 @@ from ..utilities.payment import proccess_proof
 from ..utilities.storage import create_storage, get_objects_by_id
 from ..utilities.auth import generate_api_key
 
-dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
+dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/', subdomain="dashboard")
 
 
 

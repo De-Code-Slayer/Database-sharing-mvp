@@ -8,7 +8,7 @@ import os
 
 
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, url_prefix='/auth', subdomain="auth")
 
 # Google OAuth
 google = oauth.register(

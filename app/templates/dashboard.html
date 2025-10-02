@@ -228,6 +228,10 @@ function validateDelete{{t.id}}(event) {
   </div>
 {% endif %}
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Your Object Storage</h4>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDbModal">Create Object</button>
+</div>
 <!-- Storage Instances -->
  {% if current_user.storage_instances %}
   <div class="row row-cols-1 mt-5 row-cols-md-2 row-cols-lg-3 g-3">

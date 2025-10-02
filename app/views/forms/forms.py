@@ -36,7 +36,7 @@ class CreateTenantForm(FlaskForm):
         choices=[("postgresql", "PostgreSQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"),
                   ("mysql", "MySQL", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"),
                     ("mongodb", "MongoDB", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"),
-                      ("storage", "Storage","https://img.icons8.com/?size=40&id=23275&format=png&color=EA4411")],
+                      ("storage", "Storage","https://static.thenounproject.com/png/cloud-storage-icon-4622113-512.png")],
         validators=[DataRequired()]
                              ) 
      submit = SubmitField("Create")
