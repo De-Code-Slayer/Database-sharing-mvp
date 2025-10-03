@@ -10,7 +10,7 @@ class BaseConfig:
     SQLALCHEMY_POOL_PRE_PING = True  # Check the connection before using it   
     SQLALCHEMY_ECHO = False # Log SQL queries for debugging
     LOG_LEVEL = "INFO"
-    SERVER_NAME = os.environ.get("SERVER_NAME", "localhost")
+    SERVER_NAME = os.environ.get("SERVER_NAME", "smallshardz.com")
 
     # Server defaults (can be overridden by ENV)
     FLASK_RUN_HOST = os.environ.get("FLASK_RUN_HOST", "127.0.0.1")

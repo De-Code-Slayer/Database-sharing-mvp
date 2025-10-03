@@ -8,6 +8,7 @@
   <meta name="author" content="SmallShardz">
   <title>Affordable & Secure Database Hosting | SmallShardz</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{{ url_for('static', filename='icons/favicon.png') }}" type="image/x-icon">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -44,7 +45,7 @@
       <a href="#features" class="hover:text-gray-600 transition">Features</a>
       <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
       <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
-      <a href="#signup" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">Get Started</a>
+      <a href="{{url_for('dashboard.home')}}" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">Get Started</a>
     </div>
   </nav>
 

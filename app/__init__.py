@@ -38,6 +38,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     env = os.environ.get("FLASK_ENV", "development")
+    app.config["SERVER_NAME"] = "smallshardz.com"
     
     if test_config is None:
      # Normal mode: load dev/prod config
@@ -134,6 +135,7 @@ def create_app(test_config=None):
             "event": "http_request",
             "method": request.method,
             "path": request.path,
+            "host": request.host,
             "remote_addr": request.remote_addr,
         })
 
