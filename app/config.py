@@ -25,7 +25,7 @@ class BaseConfig:
 
 
 class DevelopmentConfig(BaseConfig):
-    DEBUG = True
+    FLASK_DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "dev_secret") 
@@ -33,7 +33,7 @@ class DevelopmentConfig(BaseConfig):
     JWT_SECRET_KEY = "dev_jwt_secret"
 
 class ProductionConfig(BaseConfig):
-    DEBUG = False
+    FLASK_DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     LOG_LEVEL = "INFO"
     JWT_SECRET_KEY = "dev_jwt_secret"
