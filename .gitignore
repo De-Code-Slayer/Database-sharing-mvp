@@ -12,3 +12,6 @@ migrations/
 # ignore client_secrets.json file
 client_secret.json
 # ignore SQLite database files
+*.sqlite3
+# ignore pem file
+*.pem
