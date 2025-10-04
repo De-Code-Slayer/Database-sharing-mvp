@@ -1,7 +1,7 @@
 
 
 from flask import (Flask, request,
- render_template,jsonify
+ render_template,jsonify, url_for
 )
 from .logger import logger
 from .config import config
@@ -32,6 +32,20 @@ socketio = SocketIO()
 # Authlib OAuth setup
 oauth = OAuth()
 
+def patch_url_for(app):
+    """Force url_for('static', ...) to return relative URLs even when SERVER_NAME is set."""
+    original_url_for = url_for
+
+    def patched_url_for(endpoint, **values):
+        if endpoint == "static":
+            # Remove _external or _scheme if they exist
+            values.pop("_external", None)
+            values.pop("_scheme", None)
+            # Build normal relative URL
+            return f"/static/{values.get('filename', '')}"
+        return original_url_for(endpoint, **values)
+    app.jinja_env.globals['url_for'] = patched_url_for
+    
 
 
 def create_app(test_config=None):
@@ -39,6 +53,9 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True, subdomain_matching=True)
     env = os.environ.get("FLASK_ENV", "development")
     app.config["SERVER_NAME"] = "smallshardz.com"
+    patch_url_for(app)
+
+
     
     if test_config is None:
      # Normal mode: load dev/prod config
