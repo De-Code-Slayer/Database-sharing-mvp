@@ -4,14 +4,14 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <title>{% block title %}Small Shardz{% endblock %}</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/favicon.png') }}"/>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/favicon.png', _external=False) }}"/>
   
   <!-- Bootstrap Icons CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css', _external=False) }}" rel="stylesheet">
 
   <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -30,7 +30,7 @@
       </button>
       <!-- logo -->
        <a href="">
-        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="Logo" width="150" height="70" class="d-inline-block align-text-top">
+        <img src="{{ url_for('static', filename='icons/logo.png', _external=False) }}" alt="Logo" width="150" height="70" class="d-inline-block align-text-top">
        </a>
 
       <!-- <a class="navbar-brand fw-semibold" href="{{ url_for('dashboard.home') }}">Small Shardz</a> -->
@@ -85,6 +85,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js', _external=False) }}"></script>
 </body>
 </html>

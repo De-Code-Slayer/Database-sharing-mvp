@@ -36,6 +36,7 @@ jobs:
             pip install -r requirements.txt
 
             # Restart Gunicorn service
+            sudo chmod 755 /home/ec2-user
             sudo systemctl restart smallshardz
           EOF
 
