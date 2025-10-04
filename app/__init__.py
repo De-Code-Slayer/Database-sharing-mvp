@@ -52,7 +52,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True, subdomain_matching=True)
     env = os.environ.get("FLASK_ENV", "development")
-    app.config["SERVER_NAME"] = "smallshardz.com"
+    # app.config["SERVER_NAME"] = "smallshardz.com"
     patch_url_for(app)
 
 
@@ -118,6 +118,7 @@ def create_app(test_config=None):
     login_manager = LoginManager(app)
     login_manager.login_view = 'auth.login'    
     login_manager.login_message_category ='info'
+    
 
     @login_manager.user_loader
     def load_user(user_id):

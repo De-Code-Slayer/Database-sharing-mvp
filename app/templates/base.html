@@ -22,6 +22,7 @@
 <body class="bg-light">
 
   <!-- Navbar -->
+   {% if current_user.is_authenticated %}
   <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
     <div class="container-fluid">
       <!-- Toggle button for sidebar -->
@@ -46,6 +47,7 @@
       </div>
     </div>
   </nav>
+  {% endif %}
 
   <!-- Sidebar (offcanvas left) -->
   <div class="offcanvas offcanvas-start bg-white border-end" tabindex="-1" id="sidebarMenu">
