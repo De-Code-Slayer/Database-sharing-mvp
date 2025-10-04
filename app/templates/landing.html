@@ -225,6 +225,37 @@
     <p class="mb-10 text-gray-600 text-xl max-w-2xl mx-auto">Unlimited databases, free backups, free migrations. Starting at just $4/month.</p>
     <a href="{{url_for('dashboard.home')}}" class="orange-accent text-black px-12 py-5 rounded-full font-semibold text-xl shadow-lg hover:shadow-xl transition">Get Started</a>
   </section>
+<!-- Counter section -->
+  <section class="py-24 px-6 bg-white text-center fade-in">
+    <h2 class="text-5xl font-extrabold mb-8">Live Usage Stats</h2>
+    <div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover flex flex-col items-center">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="Databases" class="h-16 mb-4">
+        <p class="text-2xl font-bold mb-2">Databases Created</p>
+        <span id="db-count" class="text-4xl font-extrabold text-orange-500">...</span>
+      </div>
+      <div class="p-10 bg-gray-100 rounded-2xl shadow-lg card-hover flex flex-col items-center">
+        <img src="https://static.thenounproject.com/png/cloud-storage-icon-4622113-512.png" alt="Storage" class="h-16 mb-4">
+        <p class="text-2xl font-bold mb-2">Storage Buckets Created</p>
+        <span id="storage-count" class="text-4xl font-extrabold text-orange-500">...</span>
+      </div>
+    </div>
+  </section>
+  <script>
+    async function fetchStats() {
+      try {
+        const res = await fetch('https://api.smallshardz.com/stats');
+        const data = await res.json();
+        console.log(data);
+        document.getElementById('db-count').textContent = data.databases ?? '0';
+        document.getElementById('storage-count').textContent = data.storage ?? '0';
+      } catch {
+        document.getElementById('db-count').textContent = '22';
+        document.getElementById('storage-count').textContent = '5';
+      }
+    }
+    fetchStats();
+  </script>
 
   <!-- Footer -->
   <footer class="py-12 bg-gray-100 text-gray-600 text-center text-sm section-divider">
