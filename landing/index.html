@@ -248,6 +248,7 @@
       try {
         const res = await fetch('https://api.smallshardz.com/stats');
         const data = await res.json();
+        console.log(data);
         document.getElementById('db-count').textContent = data.databases ?? '0';
         document.getElementById('storage-count').textContent = data.storage ?? '0';
       } catch {
