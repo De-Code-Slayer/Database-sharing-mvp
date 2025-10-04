@@ -20,7 +20,7 @@ def save_object():
     return upload_file(request)
 
 
-@api_bp.get('stats')
+@api_bp.get('/stats')
 def stats():
     
     return jsonify(get_counts())
