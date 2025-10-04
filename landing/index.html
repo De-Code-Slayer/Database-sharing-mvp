@@ -39,15 +39,45 @@
 </head>
 <body class="bg-white text-black">
   <!-- Navigation -->
-  <nav class="fixed top-0 w-full z-10 py-4 px-6 flex justify-between items-center">
-    <div class="text-2xl font-bold text-black">SmallShardz</div>
-    <div class="space-x-4">
-      <a href="#features" class="hover:text-gray-600 transition">Features</a>
-      <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
-      <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
-      <a href="https://dashboard.smallshardz.com/home" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">Get Started</a>
-    </div>
-  </nav>
+  <nav class="fixed top-0 left-0 w-full z-10 py-4 px-6 bg-white shadow flex justify-between items-center">
+  <div class="text-2xl font-bold text-black">SmallShardz</div>
+
+  <!-- Hamburger (only visible on small screens) -->
+  <button id="menu-btn" class="block md:hidden focus:outline-none">
+    <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+
+  <!-- Menu (hidden on small screens) -->
+  <div id="menu" class="hidden md:flex space-x-4">
+    <a href="#features" class="hover:text-gray-600 transition">Features</a>
+    <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
+    <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
+    <a href="https://dashboard.smallshardz.com/home" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">
+      Get Started
+    </a>
+  </div>
+</nav>
+
+<!-- Mobile dropdown -->
+<div id="mobile-menu" class="hidden md:hidden flex flex-col space-y-2 px-6 pb-4 bg-white shadow">
+  <a href="#features" class="hover:text-gray-600 transition">Features</a>
+  <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
+  <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
+  <a href="https://dashboard.smallshardz.com/home" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">
+    Get Started
+  </a>
+</div>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+</script>
 
   <!-- Hero Section -->
   <section class="min-h-screen flex items-center justify-center text-center py-20 px-6 bg-gray-100 fade-in">
