@@ -4,7 +4,7 @@ from app.logger import logger
 from app import db, engine
 from sqlalchemy import text
 from flask import flash
-from app.database.models import DatabaseInstance
+from app.database.models import DatabaseInstance, StorageInstance, MyUser
 from flask_login import current_user
 import secrets
 import subprocess
@@ -268,6 +268,16 @@ def start_psql_session(db_instance: DatabaseInstance):
     )
 
 
+
+def get_counts():
+    user_count = MyUser.query.count()
+    db_count = DatabaseInstance.query.count()
+    storage_count = StorageInstance.query.count()
+    return {
+        "users": user_count,
+        "databases": db_count,
+        "storage": storage_count
+    }
 
 
 
