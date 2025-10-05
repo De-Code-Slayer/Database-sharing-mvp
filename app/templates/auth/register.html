@@ -51,6 +51,8 @@
             {% endif %}
           </div>
           {{ form.submit(class="btn btn-primary w-100") }}
+
+          Already have an account? <a href="{{ url_for('auth.login') }}"> Login </a>
         </form>
       </div>
     </div>

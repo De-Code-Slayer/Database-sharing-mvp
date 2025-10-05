@@ -94,7 +94,7 @@ def reset_post(token):
     return render_template("auth/reset.html", token=token)
 
 @auth.route("/logout")
-@login_required
+# @login_required
 def logout():
     email = current_user.email
     logout_user()
