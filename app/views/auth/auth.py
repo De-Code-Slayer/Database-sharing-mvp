@@ -64,7 +64,7 @@ def register():
         if form.validate_on_submit():
             user = register_user(form)
             if not user:
-                flash("Registration failed. Please use a different email.", "danger")
+                flash("Account with this email already exist, login instead?.", "danger")
                 return redirect(url_for("auth.register"))
             login_user(user)
             return redirect(url_for("dashboard.home"))
