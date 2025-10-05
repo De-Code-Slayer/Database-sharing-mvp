@@ -100,11 +100,11 @@ def create_api_key():
     return redirect(url_for("dashboard.settings"))
 
 
-@dashboard_bp.route("/base")
-@login_required
-def api_docs():
-    import os
-    return os.getenv('DATABASE_URL')
+# @dashboard_bp.route("/base")
+# @login_required
+# def api_docs():
+#     import os
+#     return os.getenv('DATABASE_URL')
 
 
 

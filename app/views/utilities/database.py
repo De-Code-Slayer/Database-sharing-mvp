@@ -85,6 +85,11 @@ def backup_database(db_uri: str, backup_path="backup.db"):
 def migrate_to(uri: str):
     logger.info(f"Migration feature stub: would migrate to {uri}")
 
+def sanitize_username(name):
+    # Allow only letters, digits, and underscores
+    safe = "".join(c if c.isalnum() else "_" for c in name)
+    return safe.lower()
+
 def create_postgres_tenant():
    
 
@@ -93,7 +98,7 @@ def create_postgres_tenant():
 
         # Auto-generate username/password 
         
-        username = f"user_{current_user.username}_{secrets.token_hex(4)}"
+        username = sanitize_username(f"user_{current_user.username}_{secrets.token_hex(4)}")
         database_name = f"db_{secrets.token_hex(4)}"
         password = secrets.token_urlsafe(16)
 
