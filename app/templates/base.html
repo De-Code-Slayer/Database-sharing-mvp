@@ -39,7 +39,7 @@
       <div class="d-flex">
         {% if current_user.is_authenticated %}
        
-          <button onClick="confirmLogout({{ url_for('auth.logout') }})" class="btn btn-outline-secondary btn-sm">Logout</button>
+          <button onClick="confirmLogout('{{ url_for('auth.logout') }}')" class="btn btn-outline-secondary btn-sm">Logout</button>
         
         {% else %}
           <a class="btn btn-primary btn-sm" href="{{ url_for('auth.login') }}">Login</a>
