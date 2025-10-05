@@ -16,6 +16,7 @@ from flask_socketio import SocketIO
 from flask_jwt_extended import JWTManager
 from sqlalchemy import create_engine
 from authlib.integrations.flask_client import OAuth
+from flask_cors import CORS
 
 
 
@@ -28,6 +29,8 @@ jwt = JWTManager()
 engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///mvp.db").replace("postgres://", "postgresql://"))
 csrf = CSRFProtect()
 socketio = SocketIO()
+# Allow only your frontend domain
+cors = CORS()
 
 # Authlib OAuth setup
 oauth = OAuth()
@@ -76,7 +79,7 @@ def create_app(test_config=None):
     # initialize socketio AFTER app is created
     socketio.init_app(app)
     jwt.init_app(app)
-
+    cors.init_app(app, origins=["https://smallshardz.com","www.smallshardz.com"])
     oauth.init_app(app)
 
    
