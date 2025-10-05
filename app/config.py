@@ -38,6 +38,8 @@ class ProductionConfig(BaseConfig):
     LOG_LEVEL = "INFO"
     SECRET_KEY = os.getenv("SECRET_KEY", "dev_secret") 
     JWT_SECRET_KEY = "dev_jwt_secret"
+    SESSION_COOKIE_DOMAIN = ".smallshardz.com"
+    REMEMBER_COOKIE_DOMAIN = ".smallshardz.com"
 
 class TestingConfig(BaseConfig):
     TESTING = True
