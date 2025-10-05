@@ -79,7 +79,7 @@ def create_app(test_config=None):
     # initialize socketio AFTER app is created
     socketio.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app, origins=["https://smallshardz.com","www.smallshardz.com"])
+    cors.init_app(app, origins=["https://smallshardz.com","www.smallshardz.com","https://dashboard.smallshardz.com/"])
     oauth.init_app(app)
 
    
