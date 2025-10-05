@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mb-4">Small Shardz API Documentation</h1>
+  <p class="lead">Interact with your storage and database programmatically using our RESTful API. All endpoints are under the <code>api</code> subdomain.</p>
+
+  <h2 class="mt-5">Authentication</h2>
+  <p>
+    <strong>API Key:</strong> Pass your API key in the <code>Authorization</code> header as <code>Bearer &lt;API_KEY&gt;</code>.<br>
+    Example:
+    <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+  </p>
+
+  <h2 class="mt-5">Endpoints</h2>
+
+  <div class="card mb-4">
+    <div class="card-header"><strong>GET /status</strong></div>
+    <div class="card-body">
+      <p>Check API status.</p>
+      <pre><code>GET https://api.smallshardz.com/status</code></pre>
+      <strong>Response:</strong>
+      <pre><code>{
+  "status": true
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header"><strong>POST /upload</strong></div>
+    <div class="card-body">
+      <p>Upload a file to your storage instance.</p>
+      <pre><code>POST https://api.smallshardz.com/upload</code></pre>
+      <strong>Headers:</strong>
+      <pre><code>Authorization: Bearer YOUR_API_KEY
+Content-Type: multipart/form-data</code></pre>
+      <strong>Body:</strong>
+      <pre><code>file: &lt;your file&gt;</code></pre>
+      <strong>Response:</strong>
+      <pre><code>{
+  "status": "ok",
+  "file_id": 123,
+  "url": "storage/user_1/filename.pdf"
+}</code></pre>
+      <strong>Errors:</strong>
+      <pre><code>{
+  "status": "failed",
+  "error": "Storage quota exceeded"
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header"><strong>GET /stats</strong></div>
+    <div class="card-body">
+      <p>Get usage statistics for your account.</p>
+      <pre><code>GET https://api.smallshardz.com/stats</code></pre>
+      <strong>Response:</strong>
+      <pre><code>{
+  "storage_count": 1,
+  "object_count": 42,
+  "quota_used": 10485760
+}</code></pre>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Example: Upload a File with <code>curl</code></h2>
+  <pre><code>curl -X POST https://api.smallshardz.com/upload \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/your/file.pdf"
+</code></pre>
+
+  <h2 class="mt-5">Error Handling</h2>
+  <p>All errors return a JSON object with <code>status: "failed"</code> and an <code>error</code> message.</p>
+
+  <h2 class="mt-5">Notes</h2>
+  <ul>
+    <li>All requests must be made over HTTPS.</li>
+    <li>API keys are required for all endpoints except <code>/status</code>.</li>
+    <li>Storage quota is enforced per user.</li>
+  </ul>
+</div>
+{% endblock %}
