@@ -147,4 +147,4 @@ def authorize_github():
         user = create_user(email, username, method="GitHub")
 
     login_user(user)
-    return redirect("/dashboard")
+    return redirect(url_for("dashboard.home"))
