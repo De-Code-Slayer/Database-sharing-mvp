@@ -55,7 +55,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True, subdomain_matching=True)
     env = os.environ.get("FLASK_ENV", "development")
-    # app.config["SERVER_NAME"] = "smallshardz.com"
+   
     patch_url_for(app)
 
 
@@ -65,8 +65,7 @@ def create_app(test_config=None):
         app.config.from_object(config[env])
         # Also allow instance/config.py (for local secrets, gitignored)
         app.config.from_pyfile("config.py", silent=True)
-        app.config["SESSION_COOKIE_DOMAIN"] = ".smallshardz.com"
-        app.config["REMEMBER_COOKIE_DOMAIN"] = ".smallshardz.com"
+       
     else:
         # Testing mode: load test config dict
         app.config.from_mapping(test_config)
