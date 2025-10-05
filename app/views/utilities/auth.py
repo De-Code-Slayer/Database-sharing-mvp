@@ -17,6 +17,10 @@ def _login_user(request):
     email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "")
     user = MyUser.query.filter_by(email=email).first()
+    
+    if user.authentication_method != "Email/Password":
+            # flash(f"Please log in using {user.authentication_method}", "warning")
+            return user
 
     
     if not user or not user.check_password(password):
