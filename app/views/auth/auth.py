@@ -45,11 +45,11 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("dashboard.home"))
     if request.method == "POST":
-        user = _login_user(request)
+        user = _login_user(request) #returns user or None
         if user:
-            flash("Logged in successfully.", "success")
-            logger.info({"event": "login", "user": user.email})
             login_user(user)
+            logger.info({"event": "login", "user": user.email})
+            flash("Logged in successfully.", "success")
             return redirect(url_for("dashboard.home"))
    
     return  render_template("auth/login.html", form=form)
@@ -63,6 +63,9 @@ def register():
     if request.method == "POST":
         if form.validate_on_submit():
             user = register_user(form)
+            if not user:
+                flash("Registration failed. Please use a different email.", "danger")
+                return redirect(url_for("auth.register"))
             login_user(user)
             return redirect(url_for("dashboard.home"))
         # else:

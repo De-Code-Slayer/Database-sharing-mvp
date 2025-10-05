@@ -141,14 +141,14 @@ def create_app(test_config=None):
     @app.errorhandler(500)
     def server_error(e):
         # note that we set the 500 status explicitly
-        return jsonify({"status":"failed", "error":e}), 500
+        return jsonify({"status":"failed", "error":str(e)}), 500
 
     @app.errorhandler(401)
     def unauthorized(e):
         # note that we set the 500 status explicitly
-        return render_template("error/page-misc-unauthorized.html"), 500
+        return render_template("error/401.html"), 500
     
-
+    
 
     @app.before_request
     def log_request():

@@ -13,7 +13,7 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 def _ts():
     return URLSafeTimedSerializer(os.getenv("SECRET_KEY"), salt="iTzComPlic-atedToDAy")
 
-def _login_user(request):
+def _login_user(request): 
     email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "")
     user = MyUser.query.filter_by(email=email).first()
