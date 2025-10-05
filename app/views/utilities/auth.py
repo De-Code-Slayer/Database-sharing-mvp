@@ -13,19 +13,32 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 def _ts():
     return URLSafeTimedSerializer(os.getenv("SECRET_KEY"), salt="iTzComPlic-atedToDAy")
 
-def _login_user(request): 
+def _login_user(request):
     email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "")
     user = MyUser.query.filter_by(email=email).first()
-    
-    if user.authentication_method != "Email/Password":
-            # flash(f"Please log in using {user.authentication_method}", "warning")
-            return user
 
-    
-    if not user or not user.check_password(password):
-            flash("Invalid credentials", "danger")
-            return False
+    # 1️⃣ No user found
+    if not user:
+        flash("Invalid credentials", "danger")
+        return False
+
+    # 2️⃣ No authentication method set
+    if not user.authentication_method:
+        flash("This account has no authentication method configured.", "warning")
+        return False
+
+    # 3️⃣ If the user uses an external auth method (e.g., Google, GitHub)
+    if user.authentication_method != "Email/Password":
+        flash(f"Please log in using {user.authentication_method}.", "info")
+        return user
+
+    # 4️⃣ If using Email/Password, verify password
+    if not user.check_password(password):
+        flash("Invalid credentials", "danger")
+        return False
+
+    # 5️⃣ Success
     return user
 
 def get_user_by_email(email):
