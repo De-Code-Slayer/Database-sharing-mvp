@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
 
 
+
+load_dotenv()  # Load environment variables from a .env file if present
 class BaseConfig:
     SECRET_KEY = os.environ.get("SECRET_KEY", "Hyah-Kujsh-12345")  # Change this in production
     SQLALCHEMY_TRACK_MODIFICATIONS = False

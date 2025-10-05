@@ -16,3 +16,4 @@ pytest-flask
 flask-jwt-extended
 authlib
 flask-cors
+python-dotenv
