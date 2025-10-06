@@ -114,7 +114,8 @@ def prepaid_subscription(plan,name, months_paid):
 
 def proccess_proof(request):
     invoice_id = request.form.get('invoice-id')
-    file = request.files["payment_proof"]
+    subscription_id = request.form.get('subscription-id')
+    file = request.files["proof"]
     tx_hash = request.form.get("tx_hash")
 
     if file and allowed_file(file.filename):
@@ -128,11 +129,15 @@ def proccess_proof(request):
     
 
         proof = PaymentProof(
-            invoice_id=invoice_id,
             user_id=current_user.id,
+            invoice_id = invoice_id,
+            subscription_id = subscription_id,
             tx_hash=tx_hash,
             screenshot_url=filepath,
         )
+
+        
+
         db.session.add(proof)
         db.session.commit()
 

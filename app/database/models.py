@@ -17,6 +17,7 @@ class MyUser(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False)
     database_limit = db.Column(db.Integer, default=3)  # max number of databases user can create
     storage_limit = db.Column(db.Integer, default=1)   # max number of storage instances
+    usdt_payment_address = db.Column(db.String(250), default='TWBhtsqMuDuio2xRmPBadwYAEJ4hh3WT9C', nullable=True)  # optional crypto payment address
 
 
 
@@ -100,7 +101,11 @@ class BillingLog(db.Model):
 
 class PaymentProof(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    invoice_id = db.Column(db.Integer, db.ForeignKey("invoice.id"), nullable=False)
+    # Either attached to an invoice OR a subscription/prepayment
+   
+    subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'), nullable=True)
+    invoice_id = db.Column(db.Integer, db.ForeignKey("invoice.id"), nullable=True)
+    
     user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"), nullable=False)
 
     tx_hash = db.Column(db.String(200), nullable=True)   # optional
