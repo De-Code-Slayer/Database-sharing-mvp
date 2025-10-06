@@ -104,7 +104,7 @@ def create_api_key():
 @login_required
 def api_docs():
     
-    return render_template("api-docs.html")
+    return render_template("api-docs2.html")
 
 
 
