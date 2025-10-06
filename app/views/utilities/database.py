@@ -173,6 +173,14 @@ def create_database_tenant(form):
     selected = form.db_type.data
     logger.info(f"Creating tenant for DB type: {selected}")
     
+    # check user limits
+    limit = current_user.database_limit
+    user_dbs = DatabaseInstance.query.filter_by(user_id=current_user.id).count()
+    if user_dbs >= limit:
+        flash(f"You have reached your database limit of {limit}. Please contact support if you need more limits. This is due to abuse", 'warning')
+        return 
+
+     # create
 
     tenants = {
         "postgresql":create_postgres_tenant,

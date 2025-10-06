@@ -350,7 +350,7 @@ function validateDelete{{t.id}}(event) {
       </div>
       
       <!-- Flask-WTF Form -->
-      <form method="POST" action="{{ url_for('dashboard.select_db') }}">
+      <form method="POST" id="submit-db-form" action="{{ url_for('dashboard.select_db') }}">
         {{ form.hidden_tag() }}
         
         <div class="modal-body">
@@ -370,7 +370,7 @@ function validateDelete{{t.id}}(event) {
                        {% if value in  ["postgresql", "storage"] %}
                 <label class="w-100" for="db-{{ value }}">
                   <div class="card h-100 shadow-sm text-center p-3">
-                    <img src="{{ image }}" style="height:40px;">
+                    <img src="{{ image }}" style="height:100px;">
                     <h6 class="mb-0">{{ label }}</h6>
                   </div>
                 </label>
@@ -388,7 +388,8 @@ function validateDelete{{t.id}}(event) {
 
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-          {{ form.submit(class="btn btn-primary") }}
+          
+          {{ form.submit(class="btn btn-primary", id="submit-db-btn") }}
         </div>
       </form>
     </div>
@@ -405,5 +406,31 @@ function validateDelete{{t.id}}(event) {
   })
 </script>
 
+<script>
+      // diable multiple submit on create db
+document.addEventListener('DOMContentLoaded', function() {
+  const submitBtn = document.getElementById('submit-db-btn');
+  const form = document.getElementById('submit-db-form');
+
+  submitBtn.addEventListener('click', function(e) {
+    
+
+    // Show SweetAlert loading screen
+    Swal.fire({
+      title: 'Creating your database...',
+      text: 'Please wait while your database is being prepared.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Submit the form manually after showing the alert
+    form.submit();
+    // Disable the button immediately
+    submitBtn.disabled = true;
+  });
+});
+</script>
 
 {% endblock %}

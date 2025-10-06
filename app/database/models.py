@@ -14,6 +14,9 @@ class MyUser(db.Model, UserMixin):
     password_hash = db.Column(db.String(256), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     authentication_method = db.Column(db.String(20), default="Email/Password")  # local, google, github
+    is_admin = db.Column(db.Boolean, default=False)
+    database_limit = db.Column(db.Integer, default=3)  # max number of databases user can create
+    storage_limit = db.Column(db.Integer, default=1)   # max number of storage instances
 
 
 

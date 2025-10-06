@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Small Shardz API Documentation{% endblock %}
+
+{% block head %}
+  <!-- Include Prism.js for syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <style>
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+    }
+    .accordion-button {
+      font-weight: bold;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="display-4 mb-4">Small Shardz API Documentation</h1>
+  <p class="lead">Interact with your storage and database programmatically using our RESTful API. All endpoints are hosted under <code>api.smallshardz.com</code>.</p>
+
+  <h2 class="mt-5">Authentication</h2>
+  <p>
+    Use your API key in the <code>Authorization</code> header as <code>Bearer &lt;API_KEY&gt;</code>.
+  </p>
+  <div class="position-relative">
+    <pre><code class="language-http">Authorization: Bearer YOUR_API_KEY</code></pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+
+  <h2 class="mt-5">API Endpoints</h2>
+  <div class="accordion" id="endpointAccordion">
+    <!-- GET /status -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="statusHeading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#statusCollapse" aria-expanded="true" aria-controls="statusCollapse">
+          <strong>GET /status</strong>
+        </button>
+      </h2>
+      <div id="statusCollapse" class="accordion-collapse collapse show" aria-labelledby="statusHeading" data-bs-parent="#endpointAccordion">
+        <div class="accordion-body">
+          <p>Check the API status to ensure it’s operational.</p>
+          <p><strong>Request:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-http">GET https://api.smallshardz.com/status</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Response:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "status": true
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST /upload -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="uploadHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uploadCollapse" aria-expanded="false" aria-controls="uploadCollapse">
+          <strong>POST /upload</strong>
+        </button>
+      </h2>
+      <div id="uploadCollapse" class="accordion-collapse collapse" aria-labelledby="uploadHeading" data-bs-parent="#endpointAccordion">
+        <div class="accordion-body">
+          <p>Upload a file to your storage instance.</p>
+          <p><strong>Request:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-http">POST https://api.smallshardz.com/upload</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Headers:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-http">Authorization: Bearer YOUR_API_KEY
+Content-Type: multipart/form-data</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Body:</strong></p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>file</td>
+                <td>File</td>
+                <td>The file to upload (e.g., PDF, image).</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>Response:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "status": "ok",
+  "file_id": 123,
+  "url": "storage/user_1/filename.pdf"
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Errors:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "status": "failed",
+  "error": "Storage quota exceeded"
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GET /stats -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="statsHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#statsCollapse" aria-expanded="false" aria-controls="statsCollapse">
+          <strong>GET /stats</strong>
+        </button>
+      </h2>
+      <div id="statsCollapse" class="accordion-collapse collapse" aria-labelledby="statsHeading" data-bs-parent="#endpointAccordion">
+        <div class="accordion-body">
+          <p>Get usage statistics for your account.</p>
+          <p><strong>Request:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-http">GET https://api.smallshardz.com/stats</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Response:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "storage_count": 1,
+  "object_count": 42,
+  "quota_used": 10485760
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Response Schema:</strong></p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>storage_count</td>
+                <td>Integer</td>
+                <td>Number of storage instances.</td>
+              </tr>
+              <tr>
+                <td>object_count</td>
+                <td>Integer</td>
+                <td>Total number of objects stored.</td>
+              </tr>
+              <tr>
+                <td>quota_used</td>
+                <td>Integer</td>
+                <td>Storage used in bytes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Example Requests</h2>
+  <ul class="nav nav-tabs" id="exampleTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="curl-tab" data-bs-toggle="tab" href="#curl" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="python-tab" data-bs-toggle="tab" href="#python" role="tab" aria-controls="python" aria-selected="false">Python</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="javascript-tab" data-bs-toggle="tab" href="#javascript" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+    </li>
+  </ul>
+  <div class="tab-content mt-3" id="exampleTabContent">
+    <div class="tab-pane fade show active" id="curl" role="tabpanel" aria-labelledby="curl-tab">
+      <p><strong>Upload a File with cURL</strong></p>
+      <div class="position-relative">
+        <pre><code class="language-bash">curl -X POST https://api.smallshardz.com/upload \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/your/file.pdf"
+</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="python" role="tabpanel" aria-labelledby="python-tab">
+      <p><strong>Upload a File with Python (requests)</strong></p>
+      <div class="position-relative">
+        <pre><code class="language-python">import requests
+
+url = "https://api.smallshardz.com/upload"
+headers = {"Authorization": "Bearer YOUR_API_KEY"}
+files = {"file": open("/path/to/your/file.pdf", "rb")}
+response = requests.post(url, headers=headers, files=files)
+print(response.json())
+</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="javascript" role="tabpanel" aria-labelledby="javascript-tab">
+      <p><strong>Upload a File with JavaScript (Fetch)</strong></p>
+      <div class="position-relative">
+        <pre><code class="language-javascript">const formData = new FormData();
+formData.append("file", document.querySelector('input[type="file"]').files[0]);
+
+fetch("https://api.smallshardz.com/upload", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY"
+  },
+  body: formData
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error("Error:", error));
+</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Error Handling</h2>
+  <p>All errors return a JSON object with <code>status: "failed"</code> and an <code>error</code> message. Common errors include:</p>
+  <ul>
+    <li><code>401 Unauthorized</code>: Invalid or missing API key.</li>
+    <li><code>400 Bad Request</code>: Invalid request parameters.</li>
+    <li><code>429 Too Many Requests</code>: Rate limit exceeded.</li>
+  </ul>
+
+  <h2 class="mt-5">API Versioning</h2>
+  <p>The current API version is <strong>v1</strong>. All endpoints are prefixed with <code>/v1/</code> (e.g., <code>https://api.smallshardz.com/v1/status</code>). Check the <a href="#changelog">changelog</a> for updates.</p>
+
+  <h2 class="mt-5">Notes</h2>
+  <ul>
+    <li>All requests must use HTTPS.</li>
+    <li>API keys are required for all endpoints except <code>/status</code>.</li>
+    <li>Storage quotas are enforced per user. Check <code>/stats</code> for usage.</li>
+    <li>Rate limits apply. Contact support for higher limits.</li>
+  </ul>
+
+  <h2 class="mt-5" id="changelog">Changelog</h2>
+  <p>Stay updated with API changes:</p>
+  <ul>
+    <li><strong>2025-10-01</strong>: Added <code>/stats</code> endpoint for usage statistics.</li>
+    <li><strong>2025-09-15</strong>: Introduced API key authentication.</li>
+  </ul>
+</div>
+
+<script>
+  // Copy code to clipboard
+  function copyCode(button) {
+    const code = button.previousElementSibling.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      button.textContent = 'Copied!';
+      setTimeout(() => button.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+{% endblock %}
