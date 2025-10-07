@@ -34,33 +34,33 @@ def terminal(db_id):
 
 @socketio.on("connect")
 def handle_connect(auth=None):
-    sid = str(uuid.uuid4())
-    session["id"] = sid
+    # Use the SocketIO-provided sid
+    sid = request.sid  
 
     db_id = session.get("db_id")
     if not db_id:
-        abort(400)
+        return False  # abort(400) aborting the connection
 
-    # Verify ownership again for safety
+    # Verify ownership again
     db_instance = get_database_instance(db_id)
     if not db_instance or db_instance.user_id != current_user.id:
-        abort(403)
+        return False
 
     # Start new psql process
     psql = start_psql_session(db_instance)
     psql_sessions[sid] = psql
 
     # Start background reader
-    def read_output():
+    def read_output(sid):
         for line in iter(psql.stdout.readline, ""):
-            socketio.emit("output", {"data": line}, room=request.sid)
+            socketio.emit("output", {"data": line}, room=sid)
 
-    socketio.start_background_task(read_output)
+    socketio.start_background_task(read_output, sid)
 
 
 @socketio.on("input")
 def handle_input(data):
-    sid = session.get("id")
+    sid = request.sid
     if sid in psql_sessions:
         psql = psql_sessions[sid]
         psql.stdin.write(data + "\n")
@@ -69,11 +69,10 @@ def handle_input(data):
 
 @socketio.on("disconnect")
 def handle_disconnect():
-    sid = session.get("id")
+    sid = request.sid
     if sid in psql_sessions:
         psql_sessions[sid].terminate()
         del psql_sessions[sid]
-
 
 
 
