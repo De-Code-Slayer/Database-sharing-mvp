@@ -18,9 +18,9 @@ def landing():
 @dashboard_bp.route('/home')
 @login_required
 def home():
-
+    import os
     form = CreateTenantForm()
-    return render_template("dashboard.html", form=form)
+    return render_template("dashboard.html", form=form, host=os.getenv("DB_HOST"))
 
 
 

@@ -25,7 +25,8 @@
                     DATABASE_URL
                     <button class="btn btn-sm btn-link p-0"
                             title="Copy to clipboard"
-                            onclick="navigator.clipboard.writeText('{{ t.uri }}'); showAlert('Copied!')">
+                           
+                            onclick="navigator.clipboard.writeText('{{ t.name }}://{{ t.username }}:{{ t.password }}@{{ host }}:5432/{{ t.database_name }}'); showAlert('Copied!')">
                      <i class="bi bi-clipboard"></i>
                     </button>
                   </p>
