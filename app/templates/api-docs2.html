@@ -185,9 +185,40 @@ Content-Type: multipart/form-data</code></pre>
 
     <!-- GET /database/uri/DATABASE_NAME -->
      <div class="accordion-item">
-
+      <h2 class="accordion-header" id="dbUriHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dbUriCollapse" aria-expanded="false" aria-controls="dbUriCollapse">
+          <strong>GET /database/uri/&lt;DATABASE_NAME&gt;</strong>
+        </button>
+      </h2>
+      <div id="dbUriCollapse" class="accordion-collapse collapse" aria-labelledby="dbUriHeading" data-bs-parent="#endpointAccordion">
+        <div class="accordion-body">
+          <p>Retrieve the connection URI for a specific database instance.</p>
+          <p><strong>Request:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-http">GET https://api.smallshardz.com/database/uri/DATABASE_NAME</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Response:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "status": "ok",
+  "uri": "postgresql://username:password@host:5432/database_name"
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <p><strong>Errors:</strong></p>
+          <div class="position-relative">
+            <pre><code class="language-json">{
+  "status": "failed",
+  "error": "Database instance not found"
+}</code></pre>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+      </div>
      </div>
 
+     
 
   </div>
 

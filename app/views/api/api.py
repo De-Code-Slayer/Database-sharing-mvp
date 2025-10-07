@@ -11,7 +11,10 @@ api_bp = Blueprint('api', __name__, subdomain='api')
 
 @api_bp.route('/status', methods=['GET'])
 def status():
-    return {"status": True}, 200    
+    return {
+        "status": "ok",
+        "message": "API is running"
+    }, 200    
 
 
 @api_bp.post("/upload")
