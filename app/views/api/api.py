@@ -1,6 +1,6 @@
 from flask import Blueprint, request, abort, send_from_directory, jsonify
 from ..utilities.storage import upload_file
-from ..utilities.database import get_counts
+from ..utilities.database import get_counts, get_db_uri
 from .helper import api_login_required
 
 
@@ -18,6 +18,11 @@ def status():
 @api_login_required
 def save_object():
     return upload_file(request)
+
+@api_bp.post("/database/uri/<db_name>")
+@api_login_required
+def db_uri(db_name):
+    return get_db_uri(db_name)
 
 
 @api_bp.get('/stats')

@@ -16,6 +16,11 @@
         <div class="card-body d-flex flex-column">
           <h6 class="fw-semibold">Created at: {{ t.created_at.strftime("%Y-%m-%d") }}</h6>
           <p class="text-muted small mb-2">Database: {{ t.name | title}}</p>
+          <span>
+        <small>
+          <i class="bi bi-info-circle"></i> use api to get database uri in production
+        </small>
+      </span>
           <div class="mt-auto">
             <div class="dropdown">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
@@ -271,6 +276,12 @@ function validateDelete{{t.id}}(event) {
       <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStorageModal{{t.id}}">
         Delete Storage
       </button>
+      <!-- info -->
+       <span>
+        <small>
+          <i class="bi bi-info-circle"></i> api documentation to upload objects to your storage
+        </small>
+      </span>
     </div>
   </div>
 </div>

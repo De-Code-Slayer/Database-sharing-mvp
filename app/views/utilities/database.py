@@ -293,6 +293,24 @@ def get_counts():
     }
 
 
+def get_db_uri(db_name):
+    if not current_user.databases:
+        return {"status": "failed", "error": "No database instance found"}, 404
+
+    db_instance = current_user.databases.filter_by(database_name=db_name).first()
+    if not db_instance:
+        return {"status": "failed", "error": "Database instance not found"}, 404
+
+    uri = f"{db_instance.name}://{db_instance.username}:{db_instance.password}@{os.getenv('DB_HOST')}:5432/{db_instance.database_name}"
+    return {"status": "ok", "uri": uri}, 200
+
+
+
+
+
+
+
+
 
 
 

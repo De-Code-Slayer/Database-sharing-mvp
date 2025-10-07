@@ -11,7 +11,6 @@ STORAGE_ROOT = os.getenv("STORAGE_ROOT", "storage")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf", "docx", "xlsx", "txt", "zip", "rar", "mp4", "mp3", "avi", "mkv", "mov", "wmv", "flv", "webm", "csv", "json", "xml", "html", "css", "js"}
 
 
-
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
