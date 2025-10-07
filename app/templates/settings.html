@@ -56,7 +56,7 @@
                              <!-- <button class="btn btn-outline-secondary btn-sm" onclick="navigator.clipboard.writeText('{{ api_key.key_hash }}')">Copy</button> -->
                              <!-- revoke button -->
                             
-                                <a href="{{url_for('dasboard.revoke_api_key', key_id=api_key.id)}}" class="btn btn-danger btn-sm">Revoke</a>
+                                <a href="{{url_for('dashboard.revoke_api_key', key_id=api_key.id)}}" class="btn btn-danger btn-sm">Revoke</a>
         
                         </li>
                     {% endfor %}
