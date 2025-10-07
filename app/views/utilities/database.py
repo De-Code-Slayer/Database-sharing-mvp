@@ -267,9 +267,13 @@ def start_psql_session(db_instance: DatabaseInstance):
     psql_cmd = (
         f'psql -U {db_instance.username} '
         f'-d {db_instance.database_name} '
-        f'-h {HOST} '
+        f'-h {HOST}'
     )
-    env = {"PGPASSWORD": db_instance.password}  # pass password securely via env
+
+    # Copy current environment and add PGPASSWORD
+    env = os.environ.copy()
+    env["PGPASSWORD"] = db_instance.password
+
     return subprocess.Popen(
         shlex.split(psql_cmd),
         stdin=subprocess.PIPE,
