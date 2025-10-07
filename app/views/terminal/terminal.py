@@ -8,7 +8,7 @@ import uuid
 
 
 
-terminal_bp = Blueprint('terminal', __name__, url_prefix='/terminal')
+terminal_bp = Blueprint('terminal', __name__, url_prefix='/terminal', subdomain="dashboard")
 
 
 
