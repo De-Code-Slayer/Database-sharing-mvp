@@ -55,6 +55,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True, subdomain_matching=True)
     env = os.environ.get("FLASK_ENV", "development")
+    print(f"env: {os.getenv('FLASK_ENV')}")
    
     patch_url_for(app)
 
@@ -106,12 +107,19 @@ def create_app(test_config=None):
     from .views.dashboard.dashboard import dashboard_bp
     from .views.terminal.terminal import terminal_bp
     
+     # Register all blueprints
+    blueprints = [dashboard_bp, api_bp, auth, terminal_bp]
 
-        # register blueprints
-    app.register_blueprint(dashboard_bp)
-    app.register_blueprint(api_bp)
-    app.register_blueprint(auth)
-    app.register_blueprint(terminal_bp)
+    for bp in blueprints:
+        # Disable subdomains in dev
+        if os.getenv("FLASK_ENV") == "development":
+            bp.subdomain = None
+        app.register_blueprint(bp)
+    #     # register blueprints
+    # app.register_blueprint(dashboard_bp)
+    # app.register_blueprint(api_bp)
+    # app.register_blueprint(auth)
+    # app.register_blueprint(terminal_bp)
 
 
     # register filters 

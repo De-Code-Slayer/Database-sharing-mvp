@@ -24,17 +24,19 @@ pg_dumpall -h "$OLD_HOST" -U "$OLD_USER" > "$BACKUP_DIR/full_backup.sql"
 echo "✅ Dump complete. Files saved to $BACKUP_DIR"
 echo "🚀 Transferring files to EC2 ($AWS_SSH_HOST)..."
 
-# 3️⃣ Copy to AWS
-scp "$BACKUP_DIR/roles.sql" "$AWS_SSH@$AWS_SSH_HOST:/tmp/"
-scp "$BACKUP_DIR/full_backup.sql" "$AWS_SSH@$AWS_SSH_HOST:/tmp/"
+# 3️⃣ Copy to AWS using key-based SSH
+SSH_KEY="$HOME/Database-sharing-mvp/BigHulk-SSH.pem"
+
+scp -i "$SSH_KEY" -o StrictHostKeyChecking=no "$BACKUP_DIR/roles.sql" "$AWS_SSH@$AWS_SSH_HOST:/tmp/"
+scp -i "$SSH_KEY" -o StrictHostKeyChecking=no "$BACKUP_DIR/full_backup.sql" "$AWS_SSH@$AWS_SSH_HOST:/tmp/"
 
 echo "🗄️ Restoring on AWS PostgreSQL ($AWS_HOST)..."
 
 # 4️⃣ Restore on AWS
-ssh "$AWS_SSH@$AWS_SSH_HOST" "
-  sudo -u postgres psql -h localhost -U $AWS_USER -f /tmp/roles.sql &&
-  sudo -u postgres psql -h localhost -U $AWS_USER -f /tmp/full_backup.sql &&
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$AWS_SSH@$AWS_SSH_HOST" "
+  sudo -u postgres psql -f /tmp/roles.sql &&
+  sudo -u postgres psql -f /tmp/full_backup.sql &&
   echo '✅ Migration completed successfully!'
 "
+echo "🎉 All done! Please verify the data on the AWS PostgreSQL server."
 
-echo "🎉 All databases and users have been migrated successfully!"
