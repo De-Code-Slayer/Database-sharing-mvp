@@ -265,10 +265,10 @@ def create_database(name: str):
 def start_psql_session(db_instance: DatabaseInstance):
     """Start psql process for a given DatabaseInstance"""
     psql_cmd = (
-        f'psql -U {db_instance.username} '
-        f'-d {db_instance.database_name} '
-        f'-h {HOST}'
-    )
+    f'/usr/bin/psql -U {db_instance.username} '
+    f'-d {db_instance.database_name} '
+    f'-h {HOST}'
+)
 
     # Copy current environment and add PGPASSWORD
     env = os.environ.copy()
