@@ -126,10 +126,10 @@ def api_key_auth():
     return None
 
 def revoke(key_id):
-    api_key = current_user.api_key.filter_by(id=key_id).first()
+    
+    api_key = next((i for i in current_user.api_key if i.id == key_id), None)
     if api_key:
-        api_key.revoked = True
-        db.session.commit()
+        api_key.revoke()
         flash("API key revoked", "success")
         logger.info({"event": "api_key_revoked", "user": current_user.email, "key_id": key_id})
     else:

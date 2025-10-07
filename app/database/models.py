@@ -212,6 +212,11 @@ class ApiKey(db.Model):
     # revoke
     def revoke(self):
         self.revoked = True
+        self.delete()
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
     
     @property
