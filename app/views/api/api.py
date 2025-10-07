@@ -11,21 +11,21 @@ api_bp = Blueprint('api', __name__, subdomain='api')
 
 @api_bp.route('/status', methods=['GET'])
 def status():
-    return {
+    return jsonify({
         "status": "ok",
         "message": "API is running"
-    }, 200    
+    }, 200    )
 
 
 @api_bp.post("/upload")
 @api_login_required
 def save_object():
-    return upload_file(request)
+    return jsonify(upload_file(request))
 
-@api_bp.post("/database/uri/<db_name>")
+@api_bp.get("/database/uri/<db_name>")
 @api_login_required
 def db_uri(db_name):
-    return get_db_uri(db_name)
+    return jsonify(get_db_uri(db_name))
 
 
 @api_bp.get('/stats')

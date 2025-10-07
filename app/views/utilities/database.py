@@ -294,7 +294,7 @@ def get_counts():
 
 
 def get_db_uri(db_name):
-    if not current_user.databases:
+    if not current_user.instances:
         return {"status": "failed", "error": "No database instance found"}, 404
 
     db_instance = current_user.databases.filter_by(database_name=db_name).first()

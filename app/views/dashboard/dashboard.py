@@ -4,7 +4,7 @@ from ..forms.forms import CreateTenantForm
 from ..utilities.database import create_database_tenant, delete_database_tenant, delete_storage_instances
 from ..utilities.payment import proccess_proof
 from ..utilities.storage import create_storage, get_objects_by_id
-from ..utilities.auth import generate_api_key
+from ..utilities.auth import generate_api_key, revoke
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/', subdomain="dashboard")
 
@@ -92,6 +92,8 @@ def settings():
 def two_fa():
     return render_template("2fa.html")
 
+
+
 @dashboard_bp.post("/create-api-key")
 @login_required
 def create_api_key():
@@ -99,6 +101,11 @@ def create_api_key():
     generate_api_key()
     return redirect(url_for("dashboard.settings"))
 
+@dashboard_bp.route("/revoke/api-key/<int:key_id>")
+@login_required
+def revoke_api_key(key_id):
+    revoke(key_id)
+    return redirect(url_for("dashboard.settings"))
 
 @dashboard_bp.route("/api/docs")
 @login_required

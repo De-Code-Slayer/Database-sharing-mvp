@@ -209,6 +209,11 @@ class ApiKey(db.Model):
 
         return raw_key  # return plain key ONCE to user
     
+    # revoke
+    def revoke(self):
+        self.revoked = True
+        db.session.commit()
+    
     @property
     def masked(self):
         # Show only the first 6 and last 4 characters
