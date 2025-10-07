@@ -297,7 +297,7 @@ def get_db_uri(db_name):
     if not current_user.instances:
         return {"status": "failed", "error": "No database instance found"}, 404
 
-    db_instance = current_user.databases.filter_by(database_name=db_name).first()
+    db_instance = current_user.instances.filter_by(database_name=db_name).first()
     if not db_instance:
         return {"status": "failed", "error": "Database instance not found"}, 404
 
