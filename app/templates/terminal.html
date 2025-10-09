@@ -18,7 +18,7 @@
   const term = new Terminal();
   term.open(document.getElementById("terminal"));
   const socket = io("https://dashboard.smallshardz.com",{
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
 });
 
   socket.on("output", function(msg) {
