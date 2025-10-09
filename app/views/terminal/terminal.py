@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from app import socketio
 from ..utilities.database import get_database_instance,start_psql_session
-
+import logging
 
 import uuid
 
@@ -26,6 +26,7 @@ def terminal(db_id):
 
     # Store db_id in session for SocketIO handlers
     session["db_id"] = db_id
+    
     return render_template("terminal.html", db_id=db_id, name=db_instance.database_name)
 
 
@@ -39,11 +40,13 @@ def handle_connect(auth=None):
 
     db_id = session.get("db_id")
     if not db_id:
+        logging.warning("No db_id in session for SocketIO connection")
         return False  # abort(400) aborting the connection
 
     # Verify ownership again
     db_instance = get_database_instance(db_id)
     if not db_instance or db_instance.user_id != current_user.id:
+        logging.warning(f"Unauthorized access attempt to db_id {db_id} by user {current_user.id}")
         return False
 
     # Start new psql process

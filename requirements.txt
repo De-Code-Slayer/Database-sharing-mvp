@@ -17,3 +17,4 @@ flask-jwt-extended
 authlib
 flask-cors
 python-dotenv
+eventlet

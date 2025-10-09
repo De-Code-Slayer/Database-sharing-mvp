@@ -1,4 +1,5 @@
-
+import eventlet
+eventlet.monkey_patch()
 
 from flask import (Flask, request,
  render_template,jsonify, url_for
@@ -79,7 +80,7 @@ def create_app(test_config=None):
     # initialize the app with the extension
     db.init_app(app)
     # initialize socketio AFTER app is created
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*", async_mode='eventlet')
     jwt.init_app(app)
     cors.init_app(app, origins=["https://smallshardz.com","www.smallshardz.com","https://dashboard.smallshardz.com"])
     oauth.init_app(app)
