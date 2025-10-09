@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
   <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.js"></script>
+
   <style>
     body { margin: 0; height: 100vh; display: flex; }
     #terminal { width: 100%; height: 100%; }
@@ -16,7 +17,9 @@
 <script>
   const term = new Terminal();
   term.open(document.getElementById("terminal"));
-  const socket = io();
+  const socket = io("https://dashboard.smallshardz.com",{
+  transports: ["websocket", "polling"],
+});
 
   socket.on("output", function(msg) {
     term.write(msg.data.replace(/\n/g, "\r\n"));
