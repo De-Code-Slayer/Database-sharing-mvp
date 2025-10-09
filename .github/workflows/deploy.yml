@@ -33,6 +33,7 @@ jobs:
             # Install/update dependencies
             pip install --upgrade pip
             pip install gunicorn
+            PIP install eventlet
             pip install -r requirements.txt
 
             # Restart Gunicorn service

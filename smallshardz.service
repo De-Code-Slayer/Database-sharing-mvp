@@ -7,7 +7,7 @@ User=ec2-user
 Group=ec2-user
 WorkingDirectory=/home/ec2-user/Database-sharing-mvp
 Environment="PATH=/home/ec2-user/Database-sharing-mvp/venv/bin"
-ExecStart=/home/ec2-user/Database-sharing-mvp/venv/bin/gunicorn -w 2 -b 0.0.0.1:8000 app:app --access-logfile -
+ExecStart=/home/ec2-user/Database-sharing-mvp/venv/bin/gunicorn -k eventlet -w 1 -b 0.0.0.1:8000 app:app --access-logfile -
 
 [Install]
 WantedBy=multi-user.targetsudo nano /etc/systemd/system/smallshardz.service
