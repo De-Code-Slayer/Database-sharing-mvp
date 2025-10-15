@@ -1,5 +1,5 @@
-import eventlet
-eventlet.monkey_patch()
+# import eventlet
+# eventlet.monkey_patch()
 
 from flask import (Flask, request,
  render_template,jsonify, url_for
@@ -50,7 +50,12 @@ def patch_url_for(app):
         return original_url_for(endpoint, **values)
     app.jinja_env.globals['url_for'] = patched_url_for
     
-
+# pass var to html templates
+def inject_global_vars():
+    return dict(
+        
+        PAYSTACK_PUBLIC_KEY=os.getenv("PAYSTACK_PUBLIC_KEY")
+    )
 
 def create_app(test_config=None):
     # create and configure the app
@@ -107,20 +112,17 @@ def create_app(test_config=None):
     from .views.auth.auth import auth
     from .views.dashboard.dashboard import dashboard_bp
     from .views.terminal.terminal import terminal_bp
+    from .views.payment.pay import payment_bp
     
      # Register all blueprints
-    blueprints = [dashboard_bp, api_bp, auth, terminal_bp]
+    blueprints = [dashboard_bp, api_bp, auth, terminal_bp, payment_bp]
 
     for bp in blueprints:
         # Disable subdomains in dev
         if os.getenv("FLASK_ENV") == "development":
             bp.subdomain = None
         app.register_blueprint(bp)
-    #     # register blueprints
-    # app.register_blueprint(dashboard_bp)
-    # app.register_blueprint(api_bp)
-    # app.register_blueprint(auth)
-    # app.register_blueprint(terminal_bp)
+    
 
 
     # register filters 
@@ -178,6 +180,9 @@ def create_app(test_config=None):
             "path": request.path,
         })
         return response
+    
+    # inject global template variables
+    app.context_processor(inject_global_vars)
     
 
     from apscheduler.schedulers.background import BackgroundScheduler

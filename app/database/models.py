@@ -226,7 +226,15 @@ class ApiKey(db.Model):
         return f"{self.key_hash[:6]}...{self.key_hash[-4:]}"
 
 
-
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"), nullable=False)
+    invoice_id = db.Column(db.Integer, db.ForeignKey("invoice.id"), nullable=True)
+    subscription_id = db.Column(db.Integer, db.ForeignKey("subscription.id"), nullable=True)
+    reference = db.Column(db.String(100), unique=True)
+    amount = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), default="pending")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 

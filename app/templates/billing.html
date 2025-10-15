@@ -138,7 +138,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitBtn{{ sub.id }}" disabled>Extend Subscription</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn{{ sub.id }}" disabled>Pay with USDT</button> or
+          <button type="button" onclick="extend_subscription('{{ sub.id }}')" 
+              class="btn btn-warning">Pay Securely</button>
         </div>
       </form>
     </div>
@@ -202,12 +204,12 @@
           <td>
             {% if inv.status != "paid" %}
               <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#payModal{{ inv.id }}">
-                Pay Now
+                Pay with USDT
               </button>
-            {% elif inv.status == "paid" %}
-              <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#extendModal{{ inv.id }}">
-                Extend
-              </button>
+              <a href="{{ url_for('payment.pay_invoice', invoice_id=inv.id) }}" 
+                  class="btn btn-warning">Pay Securely </a>
+              
+            
             {% endif %}
           </td>
         </tr>
@@ -249,64 +251,7 @@
           </div>
         </div>
 
-        <!-- Extend Modal -->
-        <div class="modal fade" id="extendSubModal{{ sub.id }}" tabindex="-1" aria-labelledby="extendSubModalLabel{{ sub.id }}" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="extendSubModalLabel{{ sub.id }}">Extend Subscription</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form method="post" action="{{ url_for('dashboard.submit_proof') }}" enctype="multipart/form-data" id="extendForm{{ sub.id }}">
-        <div class="modal-body">
-          <p>Extend your subscription for database <strong>{{ sub.sub_for }}</strong>.</p>
-
-          <!-- Extension Period Selection -->
-          <div class="mb-3">
-            <label for="months{{ sub.id }}" class="form-label">Select months to extend</label>
-            <select class="form-select" id="months{{ sub.id }}" name="months" required>
-              <option value="" disabled selected>Select duration</option>
-              <option value="1">1 month</option>
-              <option value="2">2 months</option>
-              <option value="3">3 months</option>
-              <option value="6">6 months</option>
-              <option value="12">12 months</option>
-            </select>
-          </div>
-
-          <!-- Cost Display -->
-          <div class="mb-3">
-            <label class="form-label">Total Cost</label>
-            <p class="cost-display" id="costDisplay{{ sub.id }}">$0.00</p>
-          </div>
-
-          <!-- Crypto Payment Details -->
-          <div class="mb-3" id="cryptoDetails{{ sub.id }}" style="display: none;">
-            <label class="form-label">Pay with Bitcoin</label>
-            <p>Please send the exact amount to the following address:</p>
-            <p class="crypto-address" id="cryptoAddress{{ sub.id }}">{{ CRYPTO_ADDRESS }}</p>
-            <div class="qr-code" id="qrCode{{ sub.id }}"></div>
-          </div>
-
-          <!-- Payment Proof Upload -->
-          <div class="mb-3">
-            <label for="proof{{ sub.id }}" class="form-label">Upload Payment Proof</label>
-            <input type="file" class="form-control" id="proof{{ sub.id }}" name="proof" accept="image/*,.pdf" required>
-            <small class="form-text text-muted">Upload a screenshot or PDF of the transaction confirmation.</small>
-          </div>
-
-          <!-- Error Message -->
-          <p class="error-text" id="errorText{{ sub.id }}">Please select a valid extension period and upload a valid file.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitBtn{{ sub.id }}" disabled>Extend Subscription</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
+    
 
 
        
