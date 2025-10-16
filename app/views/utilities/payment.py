@@ -82,6 +82,9 @@ def generate_monthly_invoices():
     db.session.commit()
 
 def prepaid_subscription(plan,name, months_paid):
+    
+    months_paid = int(months_paid)
+    logger.info(f"Activating prepaid subscription: plan={plan}, name={name}, months_paid={months_paid}")
     db_plan = Plan.query.filter_by(name=plan).first()
 
     start = date.today()
@@ -120,6 +123,8 @@ def prepaid_subscription(plan,name, months_paid):
     )
     db.session.add(invoice)
     db.session.commit()
+
+    flash("Subscription activated successfully.", "success")
 
     return sub, invoice
 
@@ -231,24 +236,54 @@ def proccess_payment(invoice_id):
 
 def paystack_verify_payment(reference):
 
+    payment = get_payment(reference)
+    if payment.status != "pending":
+        flash("Payment has already been processed.", "info")
+        return False
+
+     # Verify payment with Paystack
+    
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     response = requests.get(PAYSTACK_VERIFY_URL + reference, headers=headers).json()
 
-    payment = get_payment(reference)
     if not payment:
         flash("Payment record not found.", "danger")
         return False
 
     if response["data"]["status"] == "success":
         payment.status = "success"
-        payment.invoice.status = "paid"
-        db.session.commit()
         flash("Payment successful!", "success")
         pay_invoice(payment.invoice_id)
     else:
         payment.status = "failed"
         db.session.commit()
         flash("Payment failed or incomplete.", "warning")
+
+def paystack_verify_payment_ext(reference):
+
+    payment = get_payment(reference)
+    if payment.status != "pending":
+        flash("Payment has already been processed.", "info")
+        return False
+
+     # Verify payment with Paystack
+    
+    headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
+    response = requests.get(PAYSTACK_VERIFY_URL + reference, headers=headers).json()
+
+    if not payment:
+        flash("Payment record not found.", "danger")
+        return False
+
+    if response["data"]["status"] == "success":
+        payment.status = "success"
+        flash("Payment successful!", "success")
+        return response
+    else:
+        payment.status = "failed"
+        db.session.commit()
+        flash("Payment failed or incomplete.", "warning")
+
 
 def verify_amount_naira(amount):
     try:
@@ -269,6 +304,10 @@ def proccess_extension(sub_id, duration_months):
     reference = secrets.token_hex(8)
     sub = get_subscription(sub_id)
     amount = verify_amount_naira(sub.plan.price * duration_months)
+    name = sub.sub_for
+    plan = sub.plan.name
+    months = duration_months
+     # If subscription not found or not authorized, return None
     if not sub:
         return None
     payment = Payment(subscription_id=sub.id, reference=reference, amount=amount, user_id=sub.user_id)
@@ -278,7 +317,7 @@ def proccess_extension(sub_id, duration_months):
         "email": sub.user.email,
         "amount": int(amount * 100),
         "reference": reference,
-        "callback_url": url_for("payment.verify_payment_ext", reference=reference, _external=True)
+        "callback_url": url_for("payment.verify_payment_ext", name=name, plan=plan, months=months, reference=reference, _external=True)
     }
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     response = requests.post(PAYSTACK_INIT_URL, json=payload, headers=headers).json()

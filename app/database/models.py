@@ -236,6 +236,9 @@ class Payment(db.Model):
     status = db.Column(db.String(20), default="pending")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    invoice = db.relationship("Invoice", backref="payments", lazy=True)
+    subscription = db.relationship("Subscription", backref="payments", lazy=True)
+
 
 
 

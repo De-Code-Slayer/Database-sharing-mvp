@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
-from ..utilities.payment import proccess_payment, paystack_verify_payment, proccess_extension, process_intent, prepaid_subscription
+from ..utilities.payment import proccess_payment, paystack_verify_payment,paystack_verify_payment_ext, proccess_extension, process_intent, prepaid_subscription
 from app.logger import logger
 
 
@@ -23,15 +23,14 @@ def pay_invoice(invoice_id):
 def verify_payment(reference):
      if paystack_verify_payment(reference):
         flash("Payment successful!", "success")
-     return redirect(url_for("dashboard.home"))
+     return redirect(url_for("dashboard.billing"))
 
-@payment_bp.route("/ext/verify_payment/<reference>")
-def verify_payment_ext(reference):
-     if paystack_verify_payment(reference):
-        flash("Payment successful!", "success")
-        
-        prepaid_subscription()
-     return redirect(url_for("dashboard.home"))
+@payment_bp.route("/ext/<plan>/<name>/<months>/verify_payment/<reference>")
+def verify_payment_ext(plan,name,months,reference):
+     if paystack_verify_payment_ext(reference):
+        flash("Payment successful!", "success")       
+        prepaid_subscription(plan,name,months)
+     return redirect(url_for("dashboard.billing"))
 
 @payment_bp.route("/extend/<int:sub_id>/<int:duration_months>")
 @login_required
