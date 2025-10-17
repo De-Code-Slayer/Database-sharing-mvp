@@ -64,12 +64,12 @@ def submit_proof():
         return redirect(url_for("dashboard.billing"))
     return redirect(url_for("dashboard.billing"))
 
-@dashboard_bp.get("/storage/create")
+@dashboard_bp.get("/instance/storage/create")
 def create_storage_instance():
    create_storage()
    return redirect(url_for("dashboard.home"))
 
-@dashboard_bp.route("/storage/<int:storage_id>")
+@dashboard_bp.route("/instance/storage/<int:storage_id>")
 @login_required
 def view_storage(storage_id):
     files = get_objects_by_id(storage_id)
