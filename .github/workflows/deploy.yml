@@ -40,6 +40,7 @@ jobs:
             sudo chmod 755 /home/ec2-user
             sudo chown -R ec2-user:ec2-user /home/ec2-user/storage
             sudo chmod -R 775 /home/ec2-user/storage
+            sudo systemctl daemon-reload
             sudo systemctl restart smallshardz
           EOF
 
