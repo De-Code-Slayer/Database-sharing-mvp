@@ -162,7 +162,8 @@ class Objects(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("my_user.id") )   # owner of the file
     storage_id = db.Column(db.Integer, db.ForeignKey("storage_instance.id"), nullable=False)
     filename = db.Column(db.String(255), nullable=False)          # original filename
-    url = db.Column(db.String(512), nullable=False)               # path or external URL
+    url = db.Column(db.String(512), nullable=False)               # path to file on disk
+    public_url = db.Column(db.String(512), nullable=True)         # public URL 
     size = db.Column(db.BigInteger)                               # file size in bytes
     mime_type = db.Column(db.String(128))                         # image/png, application/pdf, etc.
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow) # upload timestamp

@@ -6,7 +6,7 @@ from ...database.models import StorageInstance,Objects
 from .payment import create_subscription
 import os
 
-
+CDN_HOST = 'api.smallshardz.com'
 STORAGE_ROOT = os.getenv("STORAGE_ROOT", "storage")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf", "docx", "xlsx", "txt", "zip", "rar", "mp4", "mp3", "avi", "mkv", "mov", "wmv", "flv", "webm", "csv", "json", "xml", "html", "css", "js"}
 
@@ -20,6 +20,7 @@ def save_metadata(filename, file_url, size, mime_type):
         storage_id=current_user.storage_instances.id,
         filename=filename,
         url=file_url,
+        public_url=f"{CDN_HOST}/storage/{filename}",
         size=size,
         mime_type=mime_type
     )

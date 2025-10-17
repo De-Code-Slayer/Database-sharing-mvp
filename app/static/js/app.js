@@ -15,12 +15,24 @@
 
       function extend_subscription(sub_id) {
         
+        // show a loading screen
+        Swal.fire({
+          title: 'Processing...',
+          text: 'Please wait while we process your request.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
         const duration_months = document.getElementById(`months${sub_id}`).value;
         if (!duration_months) {
           showAlert("Please select a duration.");
           return;
         }
+
         const initiateUrl = `/pay/extend/${sub_id}/${duration_months}`;
+
        
         window.location.href = initiateUrl;
       }

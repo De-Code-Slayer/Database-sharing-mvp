@@ -27,13 +27,13 @@
                         <td>{{ "%.2f"|format(file.size / 1024) }}</td>
                         <td>
                             {% if "image" in file.mime_type %}
-                                <img src="{{ file.url }}" alt="{{ file.filename }}" style="max-width:100px; max-height:100px;">
+                                <img src="{{ file.public_url }}" alt="{{ file.filename }}" style="max-width:100px; max-height:100px;">
                             {% else %}
                                 <span class="text-muted">No preview</span>
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ file.url }}" class="btn btn-sm btn-primary" download>Download</a>
+                            <a href="{{ file.public_url }}" class="btn btn-sm btn-primary" download>Download</a>
                         </td>
                     </tr>
                     {% endfor %}
