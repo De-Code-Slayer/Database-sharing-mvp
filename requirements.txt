@@ -18,3 +18,5 @@ authlib
 flask-cors
 python-dotenv
 eventlet
+celery
+

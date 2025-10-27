@@ -43,7 +43,7 @@ class DatabaseInstance(db.Model):
     # Represents a database instance owned by a user
     user_id = db.Column(db.Integer, db.ForeignKey('my_user.id'), nullable=False)
     id = db.Column(db.Integer, unique=True, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), nullable=False) #database name, postgres,mysql,etc
     username = db.Column(db.String(50), nullable=False)
     database_name = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(50), nullable=False)
@@ -241,7 +241,16 @@ class Payment(db.Model):
     subscription = db.relationship("Subscription", backref="payments", lazy=True)
 
 
-
+class MigrationRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(64))
+    source_url = db.Column(db.String(512))
+    dest_url = db.Column(db.String(512))
+    direction = db.Column(db.String(32))  # "to_smallshardz" or "from_smallshardz"
+    status = db.Column(db.String(32))     # "pending", "running", "success", "failed"
+    started_at = db.Column(db.DateTime)
+    completed_at = db.Column(db.DateTime)
+    logs = db.Column(db.Text)
 
 
 
