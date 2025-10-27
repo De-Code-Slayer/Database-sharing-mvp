@@ -5,6 +5,7 @@ from ..utilities.database import create_database_tenant, delete_database_tenant,
 from ..utilities.payment import proccess_proof
 from ..utilities.storage import create_storage, get_objects_by_id
 from ..utilities.auth import generate_api_key, revoke
+from ..utilities.migration import migrate_database
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/', subdomain="dashboard")
 
@@ -69,6 +70,15 @@ def create_storage_instance():
    create_storage()
    return redirect(url_for("dashboard.home"))
 
+@dashboard_bp.post("/instance/database/migrate")
+def migrate_database_instance():
+    # handle idempotency at a higher level if needed
+
+
+
+    return migrate_database(request.get_json())
+    
+
 @dashboard_bp.route("/instance/storage/<int:storage_id>")
 @login_required
 def view_storage(storage_id):
@@ -81,6 +91,7 @@ def delete_storage_instance():
     delete_storage_instances()
     return redirect(url_for("dashboard.home"))
     
+
 
 @dashboard_bp.route("/settings")
 @login_required

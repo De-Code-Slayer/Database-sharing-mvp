@@ -58,10 +58,8 @@
                     </form>
                   </li>
                   <li>
-                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#migrateModal{{t.id}}" 
-                            disabled data-bs-toggle="tooltip" data-bs-placement="right" 
-                            title="Coming soon">
-                      Migrate to external
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#migrateModal{{t.id}}">
+                      Migrate
                     </button>
                   </li>
                   <li>
@@ -76,7 +74,7 @@
                              >
                       Open Terminal
                     </button> -->
-                    <a class="dropdown-item" href="{{url_for('terminal.terminal', db_id=t.id)}}" target="_blank" rel="noopener noreferrer">Open Terminal</a>
+                    <!-- <a class="dropdown-item" href="{{url_for('terminal.terminal', db_id=t.id)}}" target="_blank" rel="noopener noreferrer">Open Terminal</a> -->
                   </li>
                 </span>
                 <li>
@@ -114,7 +112,7 @@
     </div>
 
     <!-- Migrate modal -->
-    <div class="modal fade" id="migrateModal{{t.id}}" tabindex="-1">
+    <!-- <div class="modal fade" id="migrateModal{{t.id}}" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header"><h5 class="modal-title">Migrate {{ t.schema }} to external DB</h5>
@@ -131,7 +129,53 @@
           </form>
         </div>
       </div>
+    </div> -->
+
+    <div class="modal fade" id="migrateModal{{ t.id }}" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Migrate {{ t.schema }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="post" onsubmit="return handleMigrationSubmit(this, '{{ t.id }}')">
+        <div class="modal-body">
+          
+          <!-- Migration Direction -->
+          <label class="form-label">Migration Direction</label>
+          <select class="form-select mb-3" name="migration_direction" id="migrationDirection{{ t.id }}" required
+                  onchange="handleMigrationDirectionChange('{{ t.id }}')">
+            <option value="" selected disabled>Select direction</option>
+            <option value="to_smallshardz">From External → Smallshardz</option>
+            <option value="from_smallshardz">From Smallshardz → External</option>
+          </select>
+
+          <!-- External DB URL -->
+          <label class="form-label" for="externalDB{{ t.id }}">External DATABASE_URL</label>
+          <input type="text" class="form-control" name="external_database_url"
+                 id="externalDB{{ t.id }}"
+                 placeholder="postgresql://user:pass@host:port/db?sslmode=require"
+                 required>
+
+          <!-- Destination (auto-filled if migrating TO Smallshardz) -->
+          <input type="hidden" name="smallshardz_database_url"
+                 id="smallshardzDB{{ t.id }}"
+                 value="{{ t.database_url }}">
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit" id="migrateBtn{{ t.id }}">
+            Migrate
+          </button>
+        </div>
+      </form>
+
     </div>
+  </div>
+</div>
 
     <!-- Import modal -->
     <div class="modal fade" id="importModal{{t.id}}" tabindex="-1">
@@ -443,6 +487,97 @@ document.addEventListener('DOMContentLoaded', function() {
     submitBtn.disabled = true;
   });
 });
+</script>
+
+<!-- migration scripts -->
+ <script>
+  // Auto-handle migration direction and URL setup
+  function handleMigrationDirectionChange(id) {
+    const direction = document.getElementById(`migrationDirection${id}`).value;
+    const externalInput = document.getElementById(`externalDB${id}`);
+    const smallshardzUrl = document.getElementById(`smallshardzDB${id}`).value;
+
+    if (direction === 'to_smallshardz') {
+      // User is migrating from an external DB INTO Smallshardz
+      externalInput.placeholder = "Enter source (external) DATABASE_URL";
+      externalInput.required = true;
+    } else if (direction === 'from_smallshardz') {
+      // User is migrating FROM Smallshardz to an external DB
+      externalInput.placeholder = "Enter destination (external) DATABASE_URL";
+      externalInput.required = true;
+    }
+  }
+
+  // Handle form submission: disable button, validate input, prevent double-clicks
+  function handleMigrationSubmit(form, id) {
+    
+    //prevent default form submission
+    event.preventDefault();
+
+    const direction = document.getElementById(`migrationDirection${id}`).value;
+    const externalUrl = document.getElementById(`externalDB${id}`).value.trim();
+    const btn = document.getElementById(`migrateBtn${id}`);
+
+    if (!direction) {
+      showAlert("Please select a migration direction.");
+      return false;
+    }
+
+    if (!externalUrl.startsWith("postgres://") && !externalUrl.startsWith("postgresql://")) {
+      showAlert("Please enter a valid Postgres DATABASE_URL.");
+      return false;
+    }
+
+    // Disable button to prevent multiple clicks
+    btn.disabled = true;
+    btn.innerHTML = "Migrating...";
+    
+    // Re-enable after 10 seconds (safety fallback)
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = "Migrate";
+    }, 10000);
+
+
+    // send json post request
+    fetch(`{{url_for('dashboard.migrate_database_instance')}}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        
+      },
+      body: JSON.stringify({
+        source_url: direction === 'to_smallshardz' ? externalUrl : document.getElementById(`smallshardzDB${id}`).value,
+        dest_url: direction === 'to_smallshardz' ? document.getElementById(`smallshardzDB${id}`).value : externalUrl,
+        instance_id: id,
+        
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        showAlert("Migration completed successfully!", "success");
+        // Optionally refresh or update UI
+        setTimeout(() => {
+         // location.reload();
+        }, 2000);
+      } else {
+        showAlert(`Migration failed: ${data.error}`, "error");
+        btn.disabled = false;
+        btn.innerHTML = "Migrate";
+      }
+    })
+    .catch(error => {
+      showAlert(`Migration error: ${error}`, "error");
+      btn.disabled = false;
+      btn.innerHTML = "Migrate";
+    });
+
+   
+
+    
+    return false; 
+  }
 </script>
 
 {% endblock %}
