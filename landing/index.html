@@ -20,6 +20,74 @@
   <link rel="icon" href="favicon.png">
   <title>Affordable & Secure Database Hosting | SmallShardz</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  /* 🎃 HALLOWEEN MODE STYLES */
+  body.halloween {
+    background: radial-gradient(circle at top, #1a001a 0%, #000 80%);
+    color: #ff7518;
+    overflow-x: hidden;
+  }
+
+  nav.halloween {
+   
+    border-bottom: 1px solid #ff7518;
+  }
+
+  .halloween a:hover {
+    color: #ff7518;
+  }
+
+  .halloween .orange-accent {
+    background-color: #ff7518;
+    color: #000;
+  }
+
+  .halloween .orange-accent:hover {
+    background-color: #e65a00;
+    box-shadow: 0 0 15px 2px #ff7518;
+  }
+
+  /* 🕷️ Glowing text for headings */
+  .halloween h1, .halloween h2, .halloween h3 {
+    text-shadow: 0 0 10px #ff7518, 0 0 20px #e65a00;
+  }
+
+  /* 🌫️ Fog overlay */
+  #fog {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    background: url('haloween.png');
+    background-size: cover;
+    opacity: 0.08;
+    animation: fogMove 60s linear infinite;
+    z-index: 5;
+  }
+  @keyframes fogMove {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 0; }
+  }
+
+  /* 🦇 Floating bats animation */
+  .bat {
+    position: fixed;
+    top: -50px;
+    font-size: 1.8rem;
+    animation: fly linear forwards;
+    z-index: 10;
+    pointer-events: none;
+  }
+  @keyframes fly {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+</style>
+
+
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -68,11 +136,16 @@
     <a href="https://dashboard.smallshardz.com/home" class="orange-accent text-black px-4 py-2 rounded-full font-semibold hover:shadow-lg transition">
       Get Started
     </a>
+    <button onclick="document.body.classList.toggle('halloween')"
+  class="ml-4 px-3 py-1 bg-black text-orange-400 rounded-lg text-sm">
+  🎃 Toggle Halloween off/on
+</button>
+
   </div>
 </nav>
 
 <!-- Mobile dropdown -->
-<div id="mobile-menu" class="hidden md:hidden flex flex-col space-y-2 px-6 pb-4 bg-white shadow">
+<div id="mobile-menu" class="hidden md:hidden flex mt-5 flex-col space-y-2 px-6 pb-4 bg-white shadow">
   <a href="#features" class="hover:text-gray-600 transition">Features</a>
   <a href="#databases" class="hover:text-gray-600 transition">Databases</a>
   <a href="#pricing" class="hover:text-gray-600 transition">Pricing</a>
@@ -285,6 +358,34 @@
   gtag('config', 'G-K29870PLPQ');
 </script>
 
+
+
+
   <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script><script id="zsiqscript" src="https://salesiq.zohopublic.com/widget?wc=siq9e0c920e7b4c9edc429682f6d2e5b6cab0ff8cdfdf2d95c1260944d7e7214eda" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Enable Halloween mode
+  document.body.classList.add('halloween');
+  document.querySelector('nav')?.classList.add('halloween');
+
+  // Add fog overlay
+  const fog = document.createElement('div');
+  fog.id = 'fog';
+  document.body.appendChild(fog);
+
+  // 🦇 Create floating bats
+  setInterval(() => {
+    const bat = document.createElement('div');
+    bat.className = 'bat';
+    bat.textContent = '🦇';
+    bat.style.left = Math.random() * 100 + 'vw';
+    bat.style.animationDuration = 3 + Math.random() * 4 + 's';
+    bat.style.opacity = 0.7;
+    document.body.appendChild(bat);
+    setTimeout(() => bat.remove(), 7000);
+  }, 500);
+});
+</script>
+
 </body>
 </html>
