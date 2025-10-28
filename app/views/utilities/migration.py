@@ -61,9 +61,15 @@ def migrate_postgres(source_url, dest_url):
     dump_path = os.path.join(temp_dir, f"source_dump_{timestamp}.dump")
 
     try:
+
+
+        PG_DUMP = shutil.which("pg_dump") or "/usr/bin/pg_dump"
+        PG_RESTORE = shutil.which("pg_restore") or "/usr/bin/pg_restore"
+
+
         print("📦 Step 1: Creating snapshot of destination database...")
         snapshot_cmd = [
-            "pg_dump",
+            PG_DUMP,
             "-Fc",             # Custom format (compressed)
             "-f", snapshot_path,
             dest_url
@@ -73,7 +79,7 @@ def migrate_postgres(source_url, dest_url):
 
         print("🚀 Step 2: Creating compressed dump of source database...")
         dump_cmd = [
-            "pg_dump",
+            PG_DUMP,
             "-Fc",
             "-f", dump_path,
             source_url
@@ -83,7 +89,7 @@ def migrate_postgres(source_url, dest_url):
 
         print("⚙️ Step 3: Restoring source dump into destination...")
         restore_cmd = [
-            "pg_restore",
+            PG_RESTORE,
             "--clean",          # Drop existing objects before recreating
             "--if-exists",      # Avoid failing if object doesn’t exist
             "--no-owner",       # Avoid role mismatches
@@ -111,7 +117,7 @@ def migrate_postgres(source_url, dest_url):
         # Attempt rollback
         try:
             restore_snapshot_cmd = [
-                "pg_restore",
+                PG_RESTORE,
                 "--clean",
                 "--if-exists",
                 "--no-owner",
