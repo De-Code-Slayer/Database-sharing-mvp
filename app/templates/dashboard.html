@@ -162,7 +162,7 @@
           <!-- Destination (auto-filled if migrating TO Smallshardz) -->
           <input type="hidden" name="smallshardz_database_url"
                  id="smallshardzDB{{ t.id }}"
-                 value="{{ t.database_url }}">
+                 value="{{ t.uri }}">
         </div>
 
         <div class="modal-footer">
@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.innerHTML = "Migrate";
     }, 10000);
 
-
+    
     // send json post request
     fetch(`{{url_for('dashboard.migrate_database_instance')}}`, {
       method: 'POST',
