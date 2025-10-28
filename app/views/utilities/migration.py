@@ -24,6 +24,9 @@ def migrate_database(req_data):
     source_url = req_data.get("source_url") if req_data else None
     dest_url = req_data.get("dest_url") if req_data else None
 
+    source_url = source_url.replace("postgresql://","postgres://")
+    dest_url = dest_url.replace("postgresql://","postgres://")
+
     database = {
         "postgresql":migrate_postgres,
         "mysql":migrate_mysql
@@ -132,7 +135,7 @@ def migrate_postgres(source_url, dest_url):
         except subprocess.CalledProcessError as rollback_err:
             print(f"⚠️ Rollback failed: {rollback_err}")
             logging.error(f"Critical: Migration and rollback both failed for user {user_id}. Manual intervention required.")
-            flash("danger","Critical: Migration and rollback both failed. Manual intervention required.", "danger")
+            flash("Critical: Migration and rollback both failed. Manual intervention required.", "danger")
             return {
                 "status": "failed",
                 "error": str(e),
