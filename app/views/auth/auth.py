@@ -85,10 +85,6 @@ def forgot_post():
 
 @auth.route("/reset/<token>", methods=["GET","POST"])
 def reset_post(token):
-    # verify token
-    if not verify_token(token):
-        flash("Invalid or expired reset link", "danger")
-        return redirect(url_for("auth.forgot"))
     if request.method == "POST":
         if reset_password(request,token):
             return redirect(url_for("auth.login"))
