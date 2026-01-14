@@ -4,10 +4,10 @@ set -e
 # === CONFIGURATION ===
 OLD_HOST="46.202.195.6"
 OLD_USER="admin"
-AWS_HOST="51.21.246.180"
+AWS_HOST="13.51.168.187"
 AWS_USER="root"
 AWS_SSH="ec2-user"
-AWS_SSH_HOST="51.21.246.180"
+AWS_SSH_HOST="13.51.168.187"
 
 # === FILE LOCATIONS ===
 BACKUP_DIR="/tmp/pg_backup_$(date +%F_%H-%M-%S)"
