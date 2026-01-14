@@ -103,7 +103,10 @@ def reset_password(request,token):
         data = _ts().loads(token, max_age=3600)
         user = MyUser.query.get(data["uid"])
         if not user:
-            raise BadSignature("no user")
+            flash(
+        "If an account exists for this email, a reset link has been sent.",
+        "info"
+    )
         user.set_password(password)
         db.session.commit()
         flash("Password updated. Please log in.", "success")
