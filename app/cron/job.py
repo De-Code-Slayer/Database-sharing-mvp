@@ -75,7 +75,12 @@ def delete_long_suspended():
 
 
 def run_billing_cron():
-    """Wrapper to run all billing tasks in order"""
-    create_invoices()
-    suspend_overdue_subscriptions()
-    delete_long_suspended()
+    # with app.app_context():
+        try:
+            create_invoices()
+            suspend_overdue_subscriptions()
+            delete_long_suspended()
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print("Billing cron failed:", e)

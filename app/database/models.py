@@ -86,6 +86,7 @@ class Invoice(db.Model):
     status = db.Column(db.String(20), default="unpaid")  # unpaid, paid
     period_start = db.Column(db.Date)
     period_end = db.Column(db.Date)
+    due_date = db.Column(db.Date) 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 

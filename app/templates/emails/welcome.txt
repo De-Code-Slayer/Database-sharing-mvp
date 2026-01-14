@@ -1,0 +1,22 @@
+Welcome to {{ app_name }}!
+
+Hello {{ username }}!
+
+Thank you for joining {{ app_name }}. Your account has been successfully created and you can now start creating databases and managing your data.
+
+Get started by:
+- Creating your first database
+- Setting up storage for your files
+- Exploring the terminal interface
+
+Visit: {{ login_url }}
+
+If you have any questions, feel free to contact our support team.
+
+Best regards,
+The {{ app_name }} Team
+
+---
+This email was sent to you because you registered for {{ app_name }}.
+If you didn't register, please ignore this email.</content>
+<parameter name="filePath">c:\Users\User\OneDrive\Desktop\work space dev job\Database Sharing\app\templates\emails\welcome.txt

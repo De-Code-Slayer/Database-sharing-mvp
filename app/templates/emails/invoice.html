@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice #{{ id }} - {{ app_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #007bff; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .invoice-details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .amount { font-size: 24px; font-weight: bold; color: #28a745; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Invoice #{{ id }}</h1>
+        </div>
+        <div class="content">
+            <h2>Invoice Details</h2>
+
+            <div class="invoice-details">
+                <p><strong>Invoice ID:</strong> {{ id }}</p>
+                <p><strong>Period:</strong> {{ period_start }} to {{ period_end }}</p>
+                <p><strong>Status:</strong> {{ status.title() }}</p>
+                <p><strong>Amount:</strong> <span class="amount">${{ "%.2f"|format(amount) }}</span></p>
+                {% if description %}
+                <p><strong>Description:</strong> {{ description }}</p>
+                {% endif %}
+            </div>
+
+            <p>Please ensure payment is made within 7 days to avoid service interruption.</p>
+
+            <p>You can view and pay your invoices in your dashboard.</p>
+
+            <p>If you have any questions about this invoice, please contact our support team.</p>
+
+            <p>Best regards,<br>The {{ app_name }} Team</p>
+        </div>
+        <div class="footer">
+            <p>This is an automated invoice notification from {{ app_name }}.</p>
+        </div>
+    </div>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\User\OneDrive\Desktop\work space dev job\Database Sharing\app\templates\emails\invoice.html

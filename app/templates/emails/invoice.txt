@@ -1,0 +1,24 @@
+Invoice #{{ id }} - {{ app_name }}
+
+INVOICE DETAILS
+===============
+Invoice ID: {{ id }}
+Period: {{ period_start }} to {{ period_end }}
+Status: {{ status.title() }}
+Amount: ${{ "%.2f"|format(amount) }}
+{% if description %}
+Description: {{ description }}
+{% endif %}
+
+Please ensure payment is made within 7 days to avoid service interruption.
+
+You can view and pay your invoices in your dashboard.
+
+If you have any questions about this invoice, please contact our support team.
+
+Best regards,
+The {{ app_name }} Team
+
+---
+This is an automated invoice notification from {{ app_name }}.</content>
+<parameter name="filePath">c:\Users\User\OneDrive\Desktop\work space dev job\Database Sharing\app\templates\emails\invoice.txt

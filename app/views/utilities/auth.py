@@ -9,6 +9,7 @@ from flask_jwt_extended import (
     JWTManager, create_access_token, jwt_required, get_jwt_identity
 )
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from .smtp import send_password_reset_email, send_welcome_email
 
 def _ts():
     return URLSafeTimedSerializer(os.getenv("SECRET_KEY"), salt="iTzComPlic-atedToDAy")
@@ -55,6 +56,10 @@ def register_user(form):
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
+
+    # Send welcome email
+    send_welcome_email(user.email, user.username)
+
     logger.info({"event": "register", "user": email})
     return user
 
@@ -69,17 +74,24 @@ def reset_link(request):
     email = request.form.get("email","").strip().lower()
     user = MyUser.query.filter_by(email=email).first()
     if not user:
-        flash("If that account exists, a reset link has been generated below.", "info")
-    token = _ts().dumps({"uid": user.id})
-    # In real life, email this. For demo, show on page.
-    reset_link = url_for("auth.reset_post", token=token, _external=True)
-    flash(f"Reset link: {reset_link}", "info")
-    logger.info({"event": "password_reset_requested", "user": email})
+        flash("If that account exists, a reset link has been sent.", "info")
+        return
 
-def verify_token(token):
-        data = _ts().loads(token, max_age=3600)
-        user = MyUser.query.get(data["uid"])
-        if not user:
+    token = _ts().dumps({"uid": user.id})
+
+    # Send password reset email
+    email_sent = send_password_reset_email(
+        user_email=email,
+        reset_token=token,
+        username=user.username
+    )
+
+    if email_sent:
+        flash("Password reset link has been sent to your email.", "success")
+        logger.info({"event": "password_reset_requested", "user": email, "email_sent": True})
+    else:
+        flash("Failed to send reset email. Please try again later.", "danger")
+        logger.error({"event": "password_reset_requested", "user": email, "email_sent": False})
             raise BadSignature("no user")
         else:
              return user
