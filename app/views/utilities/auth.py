@@ -92,9 +92,9 @@ def reset_link(request):
     else:
         flash("Failed to send reset email. Please try again later.", "danger")
         logger.error({"event": "password_reset_requested", "user": email, "email_sent": False})
-            raise BadSignature("no user")
-        else:
-             return user
+        raise BadSignature("no user")
+    return user
+
 
 
 def reset_password(request,token):
