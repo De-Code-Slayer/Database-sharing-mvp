@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import  current_user, login_user, logout_user, login_required
-from ..utilities.auth import _login_user, register_user, reset_link, reset_password, verify_token, get_user_by_email, create_user
+from ..utilities.auth import _login_user, register_user, reset_link, reset_password, get_user_by_email, create_user
 from app.logger import logger
 from ..forms.forms import RegistrationForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 from app import oauth
@@ -87,7 +87,8 @@ def forgot_post():
 def reset_post(token):
     # verify token
     if not verify_token(token):
-        return(request.referrer)
+        flash("Invalid or expired reset link", "danger")
+        return redirect(url_for("auth.forgot"))
     if request.method == "POST":
         if reset_password(request,token):
             return redirect(url_for("auth.login"))
