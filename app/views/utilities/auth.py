@@ -92,7 +92,7 @@ def reset_link(request):
     else:
         flash("Failed to send reset email. Please try again later.", "danger")
         logger.error({"event": "password_reset_requested", "user": email, "email_sent": False})
-        raise BadSignature("no user")
+        # Don't raise exception - just log the error and return
     return user
 
 
@@ -103,10 +103,7 @@ def reset_password(request,token):
         data = _ts().loads(token, max_age=3600)
         user = MyUser.query.get(data["uid"])
         if not user:
-            flash(
-        "If an account exists for this email, a reset link has been sent.",
-        "info"
-    )
+            raise BadSignature("no user")
         user.set_password(password)
         db.session.commit()
         flash("Password updated. Please log in.", "success")
@@ -116,6 +113,18 @@ def reset_password(request,token):
         flash("Reset link expired", "danger")
     except BadSignature:
         flash("Invalid reset link", "danger")
+
+
+def verify_token(token):
+    """Verify password reset token and return user if valid"""
+    try:
+        data = _ts().loads(token, max_age=3600)
+        user = MyUser.query.get(data["uid"])
+        if not user:
+            raise BadSignature("no user")
+        return user
+    except (SignatureExpired, BadSignature):
+        return None
 
 
 def generate_api_key():
