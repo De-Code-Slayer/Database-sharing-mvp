@@ -170,7 +170,7 @@ def send_password_reset_email(user_email, reset_token, username):
         template="password_reset",
         template_vars={
             'username': username,
-            'reset_url': f"https://dashboard.smallshardz.com/reset/{reset_token}",
+            'reset_url': f"https://auth.smallshardz.com/auth/reset/{reset_token}",
             'token': reset_token
         }
     )
