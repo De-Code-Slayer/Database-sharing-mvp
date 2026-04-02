@@ -14,13 +14,13 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf", "docx", "xlsx", "txt", "zip",
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_metadata(filename, file_url, size, mime_type):
+def save_metadata(filename, file_url, size, mime_type, public_url=None):
     new_file = Objects(
         user_id=current_user.id,
         storage_id=current_user.storage_instances.id,
         filename=filename,
         url=file_url,
-        public_url=f"{CDN_HOST}/storage/{filename}",
+        public_url=public_url,
         size=size,
         mime_type=mime_type
     )
@@ -66,7 +66,8 @@ def upload_file(request):
         # Save metadata
         file_url = f"{user_dir}/{filename}"
         mime_type = file.mimetype
-        file_id = save_metadata(filename, file_url, size, mime_type)
+        public_url = f"{CDN_HOST}/storage/user_{current_user.id}/{filename}"
+        file_id = save_metadata(filename, file_url, size, mime_type, public_url=public_url)
 
         # Update quota
         instance.used_space = new_used_space
@@ -75,7 +76,7 @@ def upload_file(request):
     except Exception as e:
         return {"status":"failed", "error": str(e)}, 500
 
-    return {"status": "ok", "file_id": file_id, "url": file_url}
+    return {"status": "ok", "file_id": file_id, "public_url": public_url}
 
 
 def create_storage():

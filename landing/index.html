@@ -295,30 +295,7 @@
 
 
   <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script><script id="zsiqscript" src="https://salesiq.zohopublic.com/widget?wc=siq9e0c920e7b4c9edc429682f6d2e5b6cab0ff8cdfdf2d95c1260944d7e7214eda" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Enable Halloween mode
-  document.body.classList.add('halloween');
-  document.querySelector('nav')?.classList.add('halloween');
 
-  // Add fog overlay
-  const fog = document.createElement('div');
-  fog.id = 'fog';
-  document.body.appendChild(fog);
-
-  // 🦇 Create floating bats
-  setInterval(() => {
-    const bat = document.createElement('div');
-    bat.className = 'bat';
-    bat.textContent = '🦇';
-    bat.style.left = Math.random() * 100 + 'vw';
-    bat.style.animationDuration = 3 + Math.random() * 4 + 's';
-    bat.style.opacity = 0.7;
-    document.body.appendChild(bat);
-    setTimeout(() => bat.remove(), 7000);
-  }, 500);
-});
-</script>
 
 </body>
 </html>
