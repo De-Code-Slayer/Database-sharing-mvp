@@ -3,7 +3,7 @@ Invoice #{{ id }} - {{ app_name }}
 INVOICE DETAILS
 ===============
 Invoice ID: {{ id }}
-Period: {{ period_start }} to {{ period_end }}
+Period: from {{ period_start }} to {{ period_end }}
 Status: {{ status.title() }}
 Amount: ${{ "%.2f"|format(amount) }}
 {% if description %}
@@ -14,7 +14,7 @@ Please ensure payment is made within 7 days to avoid service interruption.
 
 You can view and pay your invoices in your dashboard.
 
-If you have any questions about this invoice, please contact our support team.
+If you have any questions about this invoice or encounter trouble paying, please contact our support team by replying this mail or sennding a message on whatsapp +2348168804707.
 
 Best regards,
 The {{ app_name }} Team

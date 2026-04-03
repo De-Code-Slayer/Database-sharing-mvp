@@ -2,10 +2,6 @@
 {% block title %}Billing | Database for MVP{% endblock %}
 {% block content %}
 
-{% set invoices = current_user.invoices %}
-{% set subscriptions = current_user.subscriptions %}
-
-
  <style>
     .modal-body {
       max-height: 60vh;
@@ -49,6 +45,8 @@
           <th scope="col">Start Date</th>
           <th scope="col">End Date</th>
           <th scope="col">Status</th>
+          <th scope="col">Months Overdue</th>
+          <th scope="col">Days Past Due</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -68,12 +66,12 @@
               <span class="badge bg-secondary">{{ sub.status|capitalize }}</span>
             {% endif %}
           </td>
+          <td>{{ sub.months_overdue }}</td>
+          <td>{{ sub.days_past_due }}</td>
           <td>
-           
               <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#extendSubModal{{ sub.id }}">
                 Extend
               </button>
-            
           </td>
         </tr>
 
@@ -181,6 +179,8 @@
           <th scope="col">Invoice ID</th>
           <th scope="col">Date</th>
           <th scope="col">Amount</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Days to Due</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
@@ -192,6 +192,18 @@
           <td>{{ inv.id }}</td>
           <td>{{ inv.period_start.strftime("%Y-%m-%d") + '--' + inv.period_end.strftime("%Y-%m-%d") }}</td>
           <td>${{ "%.2f"|format(inv.amount) }}</td>
+          <td>{{ inv.due_date.strftime('%Y-%m-%d') if inv.due_date else 'N/A' }}</td>
+          <td>
+            {% if inv.days_to_due is not none %}
+              {% if inv.days_to_due < 0 %}
+                <span class="text-danger">{{ inv.days_to_due | abs }} days overdue</span>
+              {% else %}
+                {{ inv.days_to_due }} days
+              {% endif %}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
           <td>
             {% if inv.status == "paid" %}
               <span class="badge bg-success">Paid</span>
@@ -273,6 +285,36 @@
 
 
 
+
+{% if billing_logs %}
+  <div class="card mt-4">
+    <div class="card-header">Latest Billing Events</div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Event</th>
+              <th>Details</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in billing_logs %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.details }}</td>
+                <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endif %}
 
  <!-- Include qrcode.js for QR code generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

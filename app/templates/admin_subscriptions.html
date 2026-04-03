@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Admin Subscriptions | Database Sharing{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Admin: Active Subscriptions</h4>
+  <div>
+    <form method="post" action="{{ url_for('dashboard.reconcile_subscriptions') }}" style="display:inline;">
+      <button type="submit" class="btn btn-sm btn-warning me-2" onclick="return confirm('This will create invoices for subscriptions without existing invoices. Continue?')">Reconcile</button>
+    </form>
+    <a href="{{ url_for('dashboard.admin_unpaid_invoices') }}" class="btn btn-sm btn-info">View Unpaid Invoices</a>
+  </div>
+</div>
+
+{% if subscriptions %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Service</th>
+          <th>Billing Type</th>
+          <th>Status</th>
+          <th>Start Date</th>
+          <th>Renewal Date</th>
+          <th>Uptime</th>
+          <th>Contact</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subscriptions %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ sub.user.username }} ({{ sub.user.email }})</td>
+            <td>{{ sub.sub_for }}</td>
+            <td>{{ sub.billing_type }}</td>
+            <td>
+              <span class="badge {% if sub.status == 'active' %}bg-success{% elif sub.status == 'suspended' %}bg-warning{% else %}bg-secondary{% endif %}">
+                {{ sub.status|title }}
+              </span>
+            </td>
+            <td>{{ sub.start_date }}</td>
+            <td>{{ sub.end_date }}</td>
+            <td>{{ sub.uptime_months }}mo {{ sub.uptime_days }}d</td>
+            <td>
+              <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#customEmailModal" data-sub-id="{{ sub.id }}" data-user-email="{{ sub.user.email }}">Email</button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#actionsModal" data-sub-id="{{ sub.id }}">Edit</button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">No subscriptions found.</div>
+{% endif %}
+
+<!-- Actions Modal -->
+<div class="modal fade" id="actionsModal" tabindex="-1" aria-labelledby="actionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="actionsModalLabel">Manage Subscription</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="actionsForm" method="post" action="">
+          <input type="hidden" name="subscription_id" id="modalSubIdActions">
+          <div class="mb-3">
+            <label for="extendMonths" class="form-label">Extend by (months):</label>
+            <input type="number" name="extend_months" id="extendMonths" min="1" class="form-control" placeholder="Enter number of months" required>
+          </div>
+          <div class="mb-3">
+            <label for="statusSelect" class="form-label">Subscription Status:</label>
+            <select name="status" id="statusSelect" class="form-select">
+              <option value="">Keep Current</option>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Update Subscription</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Email Modal -->
+<div class="modal fade" id="customEmailModal" tabindex="-1" aria-labelledby="customEmailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customEmailModalLabel">Send Custom Email</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="customEmailForm" method="post" action="">
+          <input type="hidden" name="sub_id" id="modalSubId">
+          <div class="mb-3">
+            <label for="customText" class="form-label">Message:</label>
+            <textarea class="form-control" id="customText" name="custom_text" rows="5" required placeholder="Enter your custom message here..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Actions Modal Handler
+    var actionsModal = document.getElementById('actionsModal');
+    actionsModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var subId = button.getAttribute('data-sub-id');
+        var form = actionsModal.querySelector('#actionsForm');
+        form.action = '{{ url_for("dashboard.admin_subscriptions") }}';
+        form.querySelector('#modalSubIdActions').value = subId;
+        // Clear form
+        form.querySelector('#extendMonths').value = '';
+        form.querySelector('#statusSelect').value = '';
+    });
+
+    // Custom Email Modal Handler
+    var customEmailModal = document.getElementById('customEmailModal');
+    customEmailModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var subId = button.getAttribute('data-sub-id');
+        var userEmail = button.getAttribute('data-user-email');
+        var modalTitle = customEmailModal.querySelector('.modal-title');
+        modalTitle.textContent = 'Send Custom Email to ' + userEmail;
+        var form = customEmailModal.querySelector('#customEmailForm');
+        form.action = '{{ url_for("dashboard.send_custom_email", sub_id=0) }}'.replace('0', subId);
+        form.querySelector('#modalSubId').value = subId;
+        // Clear previous text
+        form.querySelector('#customText').value = '';
+    });
+});
+</script>
+
+{% endblock %}

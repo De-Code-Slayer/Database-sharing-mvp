@@ -63,6 +63,10 @@
       <nav class="list-group list-group-flush">
         <a href="{{ url_for('dashboard.home') }}" class="list-group-item list-group-item-action">Dashboard</a>
         <a href="{{ url_for('dashboard.billing') }}" class="list-group-item list-group-item-action">Billing</a>
+        {% if current_user.is_authenticated and current_user.is_admin %}
+          <a href="{{ url_for('dashboard.admin_subscriptions') }}" class="list-group-item list-group-item-action">Admin Subscriptions</a>
+          <a href="{{ url_for('dashboard.admin_unpaid_invoices') }}" class="list-group-item list-group-item-action">Admin Unpaid Invoices</a>
+        {% endif %}
         <a href="{{ url_for('dashboard.settings') }}" class="list-group-item list-group-item-action">Settings</a>
         <a href="{{ url_for('dashboard.api_docs') }}" class="list-group-item list-group-item-action">API Docs</a>
         {% if current_user.is_authenticated %}

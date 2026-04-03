@@ -55,7 +55,7 @@ def send_mail(
     template=None,
     template_vars=None,
     attachments=None,
-    sender=None
+    sender='SmallShardz Team <contact@smallshardz.com>'
 ):
     """
     Send email using SMTP

@@ -23,7 +23,7 @@
 
             <div class="invoice-details">
                 <p><strong>Invoice ID:</strong> {{ id }}</p>
-                <p><strong>Period:</strong> {{ period_start }} to {{ period_end }}</p>
+                <p><strong>Period:</strong> from {{ period_start }} to {{ period_end }}</p>
                 <p><strong>Status:</strong> {{ status.title() }}</p>
                 <p><strong>Amount:</strong> <span class="amount">${{ "%.2f"|format(amount) }}</span></p>
                 {% if description %}
