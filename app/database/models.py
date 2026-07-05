@@ -77,7 +77,6 @@ class Subscription(db.Model):
     invoices = db.relationship("Invoice", backref="subscription", lazy=True)
 
 
-
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("my_user.id"))
