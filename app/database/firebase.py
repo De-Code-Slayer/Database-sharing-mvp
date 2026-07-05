@@ -18,6 +18,8 @@ else:
 
 
 
+
+
 cred = credentials.Certificate(CRED_PATH)
 firebase_admin.initialize_app(cred, {
   "storageBucket": "starter-pack-9fef5.appspot.com" 
